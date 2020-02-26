@@ -51,27 +51,50 @@ class FetchWAFEvents implements ShouldQueue
 
 
 
-        $events=$waf->getEvents($this->zone->zone_id);
+        $events=$waf->getEvents($this->zone->zone_id,1,20);
         
 
 
-      // dd($events);
+$i=0;
 
-
-        foreach ($events as $event) {
+$events=(array)$events;
+//dd($events);
+ini_set('max_execution_time', '0');
+        foreach ($events['result'] as $event) {
             # code...
-           $event=(array)$event;
-            $check['resource_id']=$event['id'];
+           
+
+        // dd($event->ray_id);
+
+         // print_r($event['0']->ray_id);
+          // die();
+          
+            $check['resource_id']=$event->ray_id;
             $check['zone_id']=$this->zone->id;
 
 
-            $event['client_ip']=$event['ip'];
-            $event['scheme']=$event['protocol'];
-            $event['domain']=$event['host'];
-            $event['rule_name']=$event['rule_message'];
-            $event['timestamp']=strtotime($event['occurred_at']);
-            $event['count']=0;
-            $event['ref_id']='';
+
+            
+         
+       // die();
+        $evente['client_ip']=$event->ip;
+
+        $evente['rule_id']=$event->rule_id;
+
+        $evente['country']=$event->country;
+        $evente['method']=$event->method;
+
+        $evente['type']=$event->kind;
+
+        $evente['uri']=$event->uri;
+
+        
+            $evente['scheme']=$event->proto;
+            $evente['domain']=$event->host;
+           // $event['rule_name']=$event['rule_message'];
+            $evente['timestamp']=strtotime($event->occurred_at);
+            $evente['count']=0;
+            $evente['ref_id']='';
 
             // if($event['rule_id']==null)
             // {   
@@ -80,17 +103,23 @@ class FetchWAFEvents implements ShouldQueue
             //      // $event['rule_info']=$event['rule_info']->value;
             // }
 
-            // echo $check['resource_id']."<br>";
-            unset($event['id'],$event['ip'],$event['protocol'],$event['host'],$event['rule_message'],$event['request_duration'],$event['triggered_rule_ids'],$event['cloudflare_location'],$event['occurred_at'],$event['rule_detail'],$event['type'],$event['rule_info']);
+           
+             $check['resource_id']."<br>";
+             
+            unset($event->ray_id,$event->ip,$event->proto,$event->host,$evente['request_duration'],$evente['triggered_rule_ids'],$evente['cloudflare_location'],$evente['occurred_at'],$evente['rule_detail'],$evente['type'],$evente['rule_info']);
             //var_dump($event);
-            $insertedEvent=wafEvent::updateOrCreate($check,$event);
-            // dd($insertedEvent);
 
+            
+           
+            $insertedEvent=wafEvent::updateOrCreate($check,$evente);
+            // dd($insertedEvent);
+        // $i++;
 
         }
 
 
 
+       
         
     }
 

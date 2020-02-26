@@ -24,6 +24,7 @@ use App\Jobs\FetchFirewallRules;
 use App\Jobs\FetchUaRules;
 use App\Jobs\UpdateSPWAF;
 use App\Jobs\DeleteFirewallRule;
+use App\Jobs\FetchWAFEvents;
 
 
 use App\Jobs\DeleteUaRule;
@@ -49,7 +50,15 @@ class FirewallController extends Controller
          // return $cf;
        // return "ok";
 
-	 $cfaccount->handle();
+     $cfaccount->handle();
+     
+
+     $cfaccount2 = new FetchWAFEvents($zone);
+ 
+         // return $cf;
+       // return "ok";
+
+	 $cfaccount2->handle();
 	
       
         if(!(auth()->user()->id == $zone->user->id OR auth()->user()->id == $zone->user->owner OR auth()->user()->id == 1))

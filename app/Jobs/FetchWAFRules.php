@@ -60,7 +60,7 @@ class FetchWAFRules implements ShouldQueue
 
      $rulesObj=$WAF->getRules($this->zone->zone_id,$this->package);
      $rules=$rulesObj->result;
-     dd($rules);
+     //dd($rules);
 $total_pages=$rulesObj->result_info->total_pages;
        $page=1;
         if($total_pages>$page)

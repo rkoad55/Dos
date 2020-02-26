@@ -46,7 +46,7 @@ class FetchFirewallRules implements ShouldQueue
        $rulesss=$zonesss->getZoneAccessRules($this->zone->zone_id);
 // dd($this->zone->cfaccount->email);
 
-      // dd($rules);
+    //  dd($rulesss);
 
         //dd($records);
             foreach ($rulesss as $rule) {
@@ -54,12 +54,12 @@ class FetchFirewallRules implements ShouldQueue
                 $rule=json_decode(json_encode($rule),true);
 
               
-//print_r($rule);
+ //print_r($rule);
 
 
 
-    // if($rule['scope']['type']=="zone")
-    if($rule['scope']['type']=="organization")
+    // if($rule['scope']['type']=="organization"zone)
+    if($rule['scope']['type']=="zone")
     {
     $check['zone_id'] = $this->zone->id;
     $check['record_id']    = $rule['id'];
