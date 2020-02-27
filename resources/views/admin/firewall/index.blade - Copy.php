@@ -244,7 +244,7 @@
 @endforeach
 		  </div>
           <div class="tab-pane fade" id="tab3default">
-		         <div class="panel-heading"><h2 style="display: inline">Access Rules for {{ $records->first()->zone->name }}</h2>
+		  Access Rules for {{ $records->first()->zone->name }}</h2>
         <div class="pull-right">
       <a class="btn btn-primary" id="add_rule" data-toggle="modal" > Add New Rule</a>
 
@@ -253,64 +253,19 @@
 
 
       <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
-
-        <div class="panel-body table-responsive">
-        
-
-            <table class="table table-bordered table-striped table-condensed">
-
-                <thead>
-                    <tr>
-                        
-                        <th >Value</th>
-                        
-                        <th>Action</th>
-			<th> Notes </th>
-                        <th>&nbsp;</th>
-
-                    </tr>
-                </thead>
-
-                <tbody>
-                    @if (count($rules) > 0)
-                        @foreach ($rules as $rule)
-                            <tr id="rule_{{ $rule->id }}" data-entry-id="{{ $rule->id }}">
-                                <td>{{ $rule->value }}</td>
-
-                                 
-                                
-                                <td>
-
-                              
-                <select style="width:200px;" class="select2 firewallAction" id="{{ $rule->id }}" name="firewallAction">
-                <option {{ $rule->mode  == "whitelist" ? "selected":"" }} value="whitelist">Whitelist</option>
-                <option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
-                <option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
-                <option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
-               
-            </select>
-                                    </td>
-                              <td style="color:grey; font-size:12px; width:40%;">{{ $rule->notes }}</td>
-                                <td>
-                                    <a class="deleteRule" rule-id="{{$rule->id}}" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-remove"></i>
-                                    </a>
-
-
-                                </td>
-
-                            </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="9">@lang('global.app_no_entries_in_table')</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-        </div>
-    </div>
+    
+ </div>
 </div>
+    
+
+
+                </div>
+                <div class="tab-pane" id="waf">
+                  
+                      @if($zone->plan == "free")
+
+      <div class="alert alert-info">Domain is not configured to use WAF Feature, Please contact BlockDOS for WAF activation.</div>
+		  </div>
           <div class="tab-pane fade" id="tab4default">Default 4</div>
           <div class="tab-pane fade" id="tab5default">Default 5</div>
       </div>
@@ -436,205 +391,9 @@
                   
 
     <div class="panel panel-default panel-main">
- 
-<div class="before-panel">
-        <div class="panel-body  row">
-          <div class="col-lg-8">
-          <div  class="setting-title" >
-            <h3> UserAgent Rules</h3>
-<?php
-  $allowed=10;
-
-  if($zone->plan=="pro")
-  {
-             $allowed=20;
-  }
-  elseif($zone->plan=="business")
-  {
-             $allowed=50;
-  }
-  
-  elseif($zone->plan=="enterprise")
-  {
-             $allowed=100;
-  }
-
-
-            
-?>
-<p style="font-weight: bold;">You have used <span id="ruleCount">{{  count($uaRules->where('paused','0')) }}</span> out of 
-            <span id="allowed">{{ $allowed }}</span> allowed UA rules.</p>
-
-  <p>User-Agent Blocking allows you to block a specific (complete) User-Agent string, and provides you with options as to how block/mitigate it. The list of actions permitted are the same as the IP Firewall, those being Block, JS Challenge, Captcha and Challenge.
-</p>
-
-
-
-  
-
-</div>
-
-          
-          </div>
-          <div class="col-lg-4 right ">
-             <div class="col-lg-8">
- 
-
-
-          </div>
-      </div>
-
-    
- </div>
-</div>
-    <div class="panel panel-default panel-main">
-       
-
-                </div>
-                <div class="tab-pane" id="waf">
-                  
-                      @if($zone->plan == "free")
-
-      <div class="alert alert-info">Domain is not configured to use WAF Feature, Please contact BlockDOS for WAF activation.</div>
+        <div class="panel-heading"><h2 style="display: inline">
       @else
   
-   <div class="panel panel-default panel-main">
-      <div class="panel-body  row">
-          <div class="col-lg-8">
-          <div  class="setting-title" ><h3>
- Web Application Firewall 
-    
-    
-</h3>
-
-
-
-
-  <p>Enable / Disable Web Application Firewall </p>
-
-
-  <p class="text-info">This setting was last changed 2 days ago</p>
-
-
-</div>
-
-          <?php echo  $waf=$zoneSetting->where('name','waf')->first()->value; ?>
-          </div>
-          <div class="col-lg-4 right ">
-           <div  class="setting-title" >
-
-           </div>
-          <select settingid="{{$zoneSetting->where('name','waf')->first()->id }}"  style="width: 200px;" class="select2 changeableSetting" id="waf" name="waf">
-                        <option {{ $waf === "off" ? "selected":"" }}  value="off">OFF</option>
-                        <option {{ $waf === "on" ? "selected":"" }} value="on">ON</option>
-                        
-                      
-                        
-                    </select>
-          </div>
-      </div>
-
-    </div>
-
-
-
-@foreach($wafPackages as $wafPackage)
-
- <div class="panel panel-default panel-main">
-      <div class="panel-body  ">
-      <div class="row">
-          <div class="col-lg-8">
-          <div  class="setting-title" ><h3>
-
-  {{ title_case(str_replace("CloudFlare","BlockDOS",str_replace("_"," ",$wafPackage->name))) }}
-    
-    
-</h3>
-
-
-
-
-  <p>{{ title_case(str_replace("CloudFlare","BlockDOS",str_replace("_"," ",$wafPackage->description))) }}</p>
-
-
-  <p class="text-info">This setting was last changed 2 days ago</p>
-
-
-</div>
-
-          <?php $sensitivity=$wafPackage->sensitivity;
-                $action=$wafPackage->action;
-                
-           ?>
-          </div>
-
-          @if($wafPackage->detection_mode!="traditional")
-          <div class="col-lg-4 right ">
-           <div  class="waf-package-title" >
-              Senstivity
-           </div>
-          <select package-id="{{$wafPackage->id }}" setting="sensitivity"  style="width: 200px;" class="select2 wafPackageSetting" id="sensitivity" name="sensitivity">
-                        <option {{ $wafPackage->sensitivity === "off" ? "selected":"" }} disabled="" value="off">Off</option>
-                       
-                        <option {{ $wafPackage->sensitivity === "low" ? "selected":"" }} value="low">Low</option>
-                        <option {{ $wafPackage->sensitivity === "medium" ? "selected":"" }} value="medium">Medium</option>
-                        <option {{ $wafPackage->sensitivity === "high" ? "selected":"" }} value="high">High</option>
-                        
-                        
-                    </select>
-
-
-                     <div  class="waf-package-title" >
-              Action
-           </div>
-          <select package-id="{{$wafPackage->id }}" setting="action_mode"  style="width: 200px;" class="select2 wafPackageSetting" id="action1" name="action">
-                        <option {{ $wafPackage->action_mode === "simulate" ? "selected":"" }} value="simulate">Simulate</option>
-                        <option {{ $wafPackage->action_mode === "challenge" ? "selected":"" }} value="challenge">Challenge</option>
-                        <option {{ $wafPackage->action_mode === "block" ? "selected":"" }} value="block">Block</option>
-                        
-                        
-                    </select>
-          </div>
-          @endif
-     
-</div>
-
-      <div class="expandable wafGroups">
-
-        
-
-           <table class="table table-bordered table-striped table-condensed">
-           <thead>
-                <tr>
-                <th>Group</th>
-                <th>Description</th>
-                <th>Mode</th>
-                </tr>
-</thead>
-                @foreach($wafPackage->wafGroup as $wafGroup)
-
-                  <tr>
-                <td><a class="pointer showWAFGroupDetails" data-pid="{{ $wafPackage->id }}" data-gid="{{ $wafGroup->id }}">{{ str_replace("Cloudflare","BlockDOS",$wafGroup->name) }}</a></td>
-                <td>{{ str_replace("Cloudflare","BlockDOS",$wafGroup->description) }}</td>
-                <td> 
-
-                <input group-id="{{ $wafGroup->id }}" class="wafGroupToggle" type="checkbox" data-onstyle="primary" data-offstyle="default" {{ $wafGroup->mode === "on" ? "checked" : "" }} data-toggle="toggle" data-on=" ON" data-off="OFF">
-                
-
-
-                </td>
-                </tr>
-
-                @endforeach
-            </table>
-            
-
-     
-
-      </div>
- </div>
-    </div>
-@endforeach
  @endif   
 
  

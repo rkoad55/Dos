@@ -59,7 +59,7 @@ $i=0;
 
 $events=(array)$events;
 //dd($events);
-ini_set('max_execution_time', '0');
+//ini_set('max_execution_time', '0');
         foreach ($events['result'] as $event) {
             # code...
            
@@ -88,13 +88,23 @@ ini_set('max_execution_time', '0');
 
         $evente['uri']=$event->uri;
 
+        $evente['action']=$event->action;
+
+        $evente['ref_id']=$event->rule_id;
+
+        $evente['user_agent']=$event->ua;
+        $evente['scheme']=$event->scheme;
+
+        $evente['request_type']=$event->source;
+        $evente['rule_name']=$event->kind;
+
         
             $evente['scheme']=$event->proto;
             $evente['domain']=$event->host;
            // $event['rule_name']=$event['rule_message'];
             $evente['timestamp']=strtotime($event->occurred_at);
-            $evente['count']=0;
-            $evente['ref_id']='';
+            $evente['count']=1;
+           // $evente['ref_id']='';
 
             // if($event['rule_id']==null)
             // {   

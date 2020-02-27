@@ -82,8 +82,11 @@ class FirewallController extends Controller
 
 
          $wafPackages=$zone->wafPackage;
-         $events=$zone->wafEvent->sortBy('timestamp')->take(500);
-        // die();
+         $events=$zone->wafEvent->sortBy('timestamp')->take(50000);
+
+       // echo  count($events);
+       //  die();
+        //die();
 
     // $ok=$zone->wafEvent->sortBy('timestamp')->take(500);
         // echo "$ok";
