@@ -3,10 +3,7 @@
 
 @section('content')
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
 
 {{-- Firewall Code Starts --}}
 <div class="panel with-nav-tabs panel-default">
@@ -28,15 +25,7 @@
 				</div>
 				
 				<div class="panel-body">
-                    <!--button class="btn btn-primary">Add Filters</button-->	
-
-<br/>
-
-
-
-
-                    <div id="container"></div>
-
+                    <button class="btn btn-primary">Add Filters</button>					
 				</div>
 
             </div>
@@ -750,172 +739,8 @@
  
  </div>
  </div>
-
- <script type="text/javascript">
-
- Highcharts.chart('container', {
-    chart: {
-        type: 'area'
-    },
-    title: {
-        text: ''
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
-        categories: [<?php
-
-
-$challenge=0;
-$drop=0;
-$allow=0;
-$block=0;
-
-
-echo "date";
-          
-          foreach($events as $evend ){
-
-   // $date=$evend->timestamp;
-    // echo date('H:i:s',$date) ;
-    //echo now() ;
-   // echo "Date";
-     
-             }
-          
-          
-          
-          ?>],
-        tickmarkPlacement: 'on',
-        title: {
-            enabled: false
-        }
-    },
-    yAxis: {
-        title: {
-            text: 'Events'
-        },
-        labels: {
-            formatter: function () {
-                return this.value / 1000;
-            }
-        }
-    },
-    tooltip: {
-        split: true,
-        valueSuffix: ' '
-    },
-    plotOptions: {
-        area: {
-            stacking: 'normal',
-            lineColor: '#666666',
-            lineWidth: 1,
-            marker: {
-                lineWidth: 1,
-                lineColor: '#666666'
-            }
-        }
-    },
-    series: [{
-        name: 'Challenge',
-        data: [<?php  foreach($events as $evend ){
-
-      if($evend->action=='challenge'){
-
-
-         $challenge++;
-
-
-          }
-
-
-
-
-
-
-
- }
- 
- 
- echo $challenge;?>]
-    }, {
-        name: 'Log/Simulate',
-        data: [<?php  foreach($events as $evend ){
-
-if($evend->action=='drop'){
-
-
-   $drop++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $drop;?>]
-    }, {
-        name: 'Allow',
-        data: [<?php  foreach($events as $evend ){
-
-if($evend->action=='allow'){
-
-
-   $allow++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $allow;?>]
-    }, {
-        name: 'Block',
-        data: [<?php  foreach($events as $evend ){
-
-if($evend->action=='block'){
-
-
-   $block++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $block;?>]
-    }]
-});
-
-</script>
-
  
 @stop
-
-
-
-
 
 @section('javascript')
     <script>

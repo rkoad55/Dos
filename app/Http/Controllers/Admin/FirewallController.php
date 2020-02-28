@@ -69,8 +69,49 @@ class FirewallController extends Controller
         
         $records=$zone->ZoneSetting;
         $zoneSetting=$zone->ZoneSetting;
-
-
+        $minutes=0;
+        if($minutes ==null)
+        {
+           // $minutes=$request->input('minutes');
+           $minutes=1440;    
+        }
+        else
+        {
+            $minutes=1440;    
+        }
+        
+        
+         switch ($minutes) {
+                    case 1440:
+                        $timestamp = 'Last 24 Hours';
+                        $xlabel= 'hour';
+                        break;
+                     case 10080:
+                        $timestamp = 'Last 7 Days';
+                        $xlabel= 'day';
+                        break;
+                     case 43200:
+                        $timestamp = 'Last Month';
+                        $xlabel= 'day';
+                        break;
+                    case 720:
+                        $timestamp = 'Last 12 Hours';
+                        $xlabel= '30m';
+                        break;
+                    case 360:
+                        $timestamp = 'Last 6 Hours';
+                        $xlabel= '15m';
+                        break;
+                    case 30:
+                        $timestamp = 'Last 30 Minutes';
+                        $xlabel= 'minute';
+                        break;
+                    
+                    default:
+                        $timestamp = 'Last 24 Hours';
+                        $xlabel= 'hour';
+                        break;
+                }
         // foreach ($records as $record) {
         //     # code...
         //     dump($record->name);
@@ -82,16 +123,17 @@ class FirewallController extends Controller
 
 
          $wafPackages=$zone->wafPackage;
-         $events=$zone->wafEvent->sortBy('timestamp')->take(50000);
+          $events=$zone->wafEvent->sortBy('timestamp')->take(50000);
 
-       // echo  count($events);
-       //  die();
+      
+
+      
         //die();
 
     // $ok=$zone->wafEvent->sortBy('timestamp')->take(500);
         // echo "$ok";
         // die();        
-
+        
         if($zone->cfaccount_id!=0)
         {   
 
