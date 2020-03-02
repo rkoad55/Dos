@@ -125,9 +125,92 @@ class FirewallController extends Controller
          $wafPackages=$zone->wafPackage;
           $events=$zone->wafEvent->sortBy('timestamp')->take(50000);
 
-      
+     
+          // $count = DB::table('waf_events')->distinct('client_ip')->count('client_ip');
 
-      
+
+          //$groupedByValue =$zone->wafEvent->groupBy('client_ip')->take(10);
+
+  
+
+       //  dd($groupedByValue);
+
+
+         $duplicates = DB::table('waf_events')
+         ->select('client_ip', DB::raw('COUNT(client_ip) as `count` '))
+         ->groupBy('client_ip')
+         ->havingRaw('COUNT(client_ip) > 1')
+         ->orderBy('count', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $duplicates=json_decode($duplicates,true);
+
+         $accounts = DB::table('waf_events')
+         ->select('user_agent', DB::raw('COUNT(client_ip) as `counts` '))
+         ->groupBy('user_agent')
+         ->havingRaw('COUNT(user_agent) > 1')
+         ->orderBy('counts', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $accounts=json_decode($accounts,true);
+
+         $paths = DB::table('waf_events')
+         ->select('uri', DB::raw('COUNT(uri) as `countes` '))
+         ->groupBy('uri')
+         ->havingRaw('COUNT(uri) > 1')
+         ->orderBy('countes', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $paths=json_decode($paths,true);
+
+         $countries = DB::table('waf_events')
+         ->select('uri', DB::raw('COUNT(uri) as `countes` '))
+         ->groupBy('uri')
+         ->havingRaw('COUNT(uri) > 1')
+         ->orderBy('countes', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $countries=json_decode($countries,true);
+         
+//dd($paths);
+
+/*
+foreach($duplicates as $duplicate){
+
+echo  $duplicate['client_ip'];
+
+
+}
+
+die();
+  */          //dd($product);
+        
+/*
+            array_multisort(array_column($product->items, 'count'), SORT_DESC, $product);
+
+            echo '<pre>';
+            print_r($product);
+
+           //$duplicates=array($duplicates);
+         echo  array_multisort(array_column($duplicates, 'count'), SORT_DESC, $duplicates);
+         $dupes = $groupedByValue->filter(function (Collection $duplicates) {
+           return $duplicates->count() > 1;
+                 });
+
+
+*/
+    
+
+           //dd($product);
+            
         //die();
 
     // $ok=$zone->wafEvent->sortBy('timestamp')->take(500);
@@ -143,7 +226,7 @@ class FirewallController extends Controller
             $rules=$zone->FirewallRule;
 
             $uaRules=$zone->UaRule;
-            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events'));    
+            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths'));    
         }
         else
         {

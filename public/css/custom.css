@@ -67,6 +67,24 @@ p.big {
     -moz-box-shadow: 0 0 0 transparent;
     box-shadow: 0 0 0 transparent;
 }
+/*
+My COde Starts
+*/
+.toggle{
+	width: 100% !important;
+	height: 100% !important;
+	line-height: 100%;
+}
+.toggle-handle{
+	display: none !important;
+}
+.wafGroupToggle{
+	display: none !important;
+}
+					
+/*
+My COde Ends
+*/
 select.form-control {
     border: 1px solid #ddd; 
 }

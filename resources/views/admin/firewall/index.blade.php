@@ -46,13 +46,141 @@
 			<div class="panel panel-default panel-main">
 				<div class="panel-heading">
                     <h2 style="display: inline">Events By Action</h2>
+                   
 				</div>
 				
 				<div class="panel-body">
-					<center>
-                        <h1>Graph Here</h1>
-                    </center>
+
+        <div class="container">
+  <div class="row">
+    <div class="col col-lg-6">
+    <h2><b>Ip Addresses</b></h2>
+   <?php $i=0; ?>
+    @foreach($duplicates as $row)
+       
+       <h6><b>{{ $row['client_ip'] }}</b></h6>  <p>{{ $row['count'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $i;?>" ).progressbar({
+      value: <?php echo $row['count'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $i;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    <?php $i++;?>
+       
+       
+   @endforeach
+                  
+    </div>
+
+    <div class="col col-lg-6">
+    <h2><b>User Agents</b></h2>
+    <?php $j=505050; ?>
+    @foreach($accounts as $row1)
+       
+       <h6><b>{{ $row1['user_agent'] }}</b></h6>  <p>{{ $row1['counts'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $j;?>" ).progressbar({
+      value: <?php echo $row1['counts'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $j;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+  </div>
+
+  <div class="row">
+  <div class="col col-lg-6">
+    <h2><b>Paths</b></h2>
+    <?php $j=5050504534; ?>
+    @foreach($paths as $row2)
+       
+       <h6><b>{{ $row2['uri'] }}</b></h6>  <p>{{ $row2['countes'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $j;?>" ).progressbar({
+      value: <?php echo $row2['countes'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $j;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+
+    <div class="col col-lg-6">
+    <h2><b>Countries</b></h2>
+    <?php $j=5050504534; ?>
+    @foreach($paths as $row2)
+       
+       <h6><b>{{ $row2['uri'] }}</b></h6>  <p>{{ $row2['countes'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $j;?>" ).progressbar({
+      value: <?php echo $row2['countes'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $j;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+</div>
+
+  </div>
+  
+
+
+
+
+
+					
+         
+                   
 				</div>
+
+       
 
             </div>
             {{-- For Events By Action --}}
@@ -293,12 +421,90 @@
 </div>
 
       <div class="expandable wafGroups">
+      <table class="table table-bordered table-striped table-condensed">
+           <thead>
+                <tr>
+                <th>Group</th>
+                <th>Description</th>
+                <th>Mode</th>
+                </tr>
+			</thead>
+			<tbody>
+                @foreach($wafPackage->wafGroup as $wafGroup)
 
+                  <tr>
+                <td><a class="pointer showWAFGroupDetails" data-pid="{{ $wafPackage->id }}" data-gid="{{ $wafGroup->id }}">{{ str_replace("Cloudflare","BlockDOS",$wafGroup->name) }}</a></td>
+                <td>{{ str_replace("Cloudflare","BlockDOS",$wafGroup->description) }}</td>
+                
+				<td> 
+                <input group-id="{{ $wafGroup->id }}" class="wafGroupToggle" type="checkbox" data-onstyle="primary" data-offstyle="danger" {{ $wafGroup->mode === "on" ? "checked" : "" }} data-toggle="toggle" data-on=" ON" data-off="OFF">
+                
+                </td>
+                </tr>
+
+                @endforeach
+			</tbody>
+          </table>
+          
 
       </div>
  </div>
     </div>
 @endforeach
+<div class="panel panel-default panel-main">
+			<div class = "panel-body">
+					<h2>Cloudflare DDoS Protection</h2>
+					<p>Prevents DDoS attacks across the network and application layers. These mitigations are automatically enabled for all customers across all plans.</p>
+					<br>
+					<table class="table table-condensed">
+						<thead>
+							<tr>
+								<th>Group</th>
+								<th>Description</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>HTTP Flood</td>
+								<td>Prevents attacks caused from a flood of HTTP requests.</td>
+								<td><center><a href = 'https://www.cloudflare.com/learning/ddos/http-flood-ddos-attack/'>Learn More</a></center></td>
+							</tr>
+							<tr>
+								<td>UDP Flood</td>
+								<td>Prevents attacks caused from a flood of UDP packets.</td>
+								<td><center><a href = 'https://www.cloudflare.com/learning/ddos/udp-flood-ddos-attack/'>Learn More</a></center></td>
+							</tr>
+							<tr>
+								<td>SYN Flood</td>
+								<td>Prevents attacks caused from a flood of TCP packets sent with SYN flag.</td>
+								<td><center><a href = 'https://www.cloudflare.com/learning/ddos/syn-flood-ddos-attack/'>Learn More</a></center></td>
+							</tr>
+							<tr>
+								<td>ACK Flood</td>
+								<td>Prevents attacks caused from a flood of TCP packets sent with ACK flag.</td>
+								<td><center><a href = 'https://www.cloudflare.com/learning/ddos/what-is-an-ack-flood/'>Learn More</a></center></td>
+							</tr>
+							<tr>
+								<td>QUIC Flood</td>
+								<td>Prevents attacks caused from a flood of QUIC requests.</td>
+								<td><center><a href = 'https://www.cloudflare.com/learning/ddos/what-is-a-quic-flood/'>Learn More</a></center></td>
+							</tr>
+							<tr>
+								<td> 1–5 of 5</td>
+								<td></td>
+								<td></td>
+							</tr>
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+				
+			</div>
+			</div>
           </div>
           {{-- 2nd Panel End --}}
           <div class="tab-pane fade" id="tab3default">
@@ -412,18 +618,183 @@
 				</div>
 
             </div>
+            {{-- For User Agent Blocking --}}
+	<div class="panel panel-default panel-main">
+        <div class = "container-fluid">
+		<br>
+			<h2>User Agent Blocking</h2> 
+		{{--
+		Rules for {{ $records->first()->zone->name }}
+        --}}
+<?php
+  $allowed=10;
+
+  if($zone->plan=="pro")
+  {
+    $allowed=20;
+  }
+  elseif($zone->plan=="business")
+  {
+    $allowed=50;
+  }
+  elseif($zone->plan=="enterprise")
+  {
+    $allowed=100;
+  }      
+?>
+<br>
+<br>
+	<div class="pull-left">
+		<p>Create a rule to block or challenge a specific User Agent from accessing your zone.</p>
+		<p style="font-weight: bold;">You have used <span id="ruleCount">{{  count($uaRules->where('paused','0')) }}</span> out of <span id="allowed">{{ $allowed }}</span> User Agent rules active <span class="glyphicon glyphicon-info-sign"data-toggle="tooltip" data-placement="top" title="Note: Only rules that are ON count towards your rules quota." ></span></p>
+	</div>
+	<div class="pull-right">
+      <a class="btn btn-primary" id="add_ua_rule" data-toggle="modal" data-target="#ua-rule-modal" > Create Blocking Rule</a>
+    </div>
+</div>
+<br>
+    
+      <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+        <div class="panel-body table-responsive">
+            <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th >Rule Name / Description</th>
+                        <th>Action</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (count($uaRules) > 0)
+                        @foreach ($uaRules as $rule)
+                            <tr id="rule_{{ $rule->id }}" data-entry-id="{{ $rule->id }}">
+                                <td>
+									<div>
+										{{ $rule->description }}
+									</div>
+                                  <span class="lightText">{{ $rule->value }}</span>
+								</td>
+                                <td>
+									<select style="width:200px;" class="select2 uaAction" id="{{ $rule->id }}" name="uaAction">
+										<option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
+										<option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
+										<option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
+									</select>
+                                </td>
+                              
+                                <td>
+                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
+
+                                  <a style="margin:20px;"  data-toggle="modal" data-target="#rule-edit-modal_{{ $rule->id }}" class="editUaRule" rule-id="{{$rule->id}}" class="btn btn-secondary">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                    </a>
+                                  
+                                    <a class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="9">@lang('global.app_no_entries_in_table')</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
             {{-- User Agent Blocking Ends --}}
 
             {{-- For Zone LockDown --}}
-			<div class="panel panel-default panel-main">
-				Zone LockDown
-				<div class="panel-body">
-					<center>
-                        <h1>Settings Here</h1>
-                    </center>
-				</div>
+			
+	<div class="panel panel-default panel-main">
+        <div class = "container-fluid">
+		<br>
+			<h2>Zone Lockdown</h2> 
+		{{--
+		Rules for {{ $records->first()->zone->name }}
+        --}}
+<?php
+  $allowed=10;
 
-            </div>
+  if($zone->plan=="pro")
+  {
+    $allowed=20;
+  }
+  elseif($zone->plan=="business")
+  {
+    $allowed=50;
+  }
+  elseif($zone->plan=="enterprise")
+  {
+    $allowed=100;
+  }      
+?>
+<br>
+<br>
+	<div class="pull-left">
+		<p>Lockdown a specific URL on your zone to specific IP addresses. This is useful to protect an admin or protected area from non-specified IP addresses.</p>
+		<p style="font-weight: bold;">You have used <span id="ruleCount">{{  count($uaRules->where('paused','0')) }}</span> out of <span id="allowed">{{ $allowed }}</span> Zone Lockdown Rules <span class="glyphicon glyphicon-info-sign"data-toggle="tooltip" data-placement="top" title="Note: Only rules that are ON count towards your rules quota." ></span></p>
+	</div>
+	<div class="pull-right">
+      <a class="btn btn-primary" id="add_ua_rule" data-toggle="modal" data-target="#zonelockdown-modal" > Create Zone Lockdown Rules</a>
+    </div>
+</div>
+<br>
+    
+      <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+        <div class="panel-body table-responsive">
+            <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th >Rule Name / Description</th>
+                        
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (count($uaRules) > 0)
+                        @foreach ($uaRules as $rule)
+                            <tr id="rule_{{ $rule->id }}" data-entry-id="{{ $rule->id }}">
+                                <td>
+									<div>
+										{{ $rule->description }}
+									</div>
+                                  <span class="lightText">{{ $rule->value }}</span>
+								</td>
+                                <td>
+									<select style="width:200px;" class="select2 uaAction" id="{{ $rule->id }}" name="uaAction">
+										<option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
+										<option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
+										<option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
+									</select>
+                                </td>
+                              
+                                <td>
+                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
+
+                                  <a style="margin:20px;"  data-toggle="modal" data-target="#rule-edit-modal_{{ $rule->id }}" class="editUaRule" rule-id="{{$rule->id}}" class="btn btn-secondary">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                    </a>
+                                  
+                                    <a class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-default">
+                                    <i class="glyphicon glyphicon-remove"></i>
+                                    </a>
+
+                                </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="9">@lang('global.app_no_entries_in_table')</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+    </div>
             {{-- Zone LockDown Ends --}}
 
           </div>
@@ -533,6 +904,65 @@
  
  
  </div></div>
+ 
+ 
+ <div class="modal" id="zonelockdown-modal" data-reveal>
+ 
+    <div class="modal-dialog modal-lg" >
+     <div class="modal-content">
+       <div class="modal-header">
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h4 class="modal-title">Add Zone Lockdown Rule</h4>
+       </div>
+       <div class="modal-body">
+ 
+   
+    
+     <div class="">
+ 
+ <form method="post" action="addUaRule" id="uaRule" class="uaRuleForm">
+   <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+ 
+   <div class="form-group">
+ <p>Name</p>
+ <input class="form-control" required="required" placeholder="Example: Allow traffic from Office IP address" name="zonelockdown-name"  type="text">
+ </div>
+ 
+ <br>
+
+ <div class="form-group">
+ <p>URLs</p>
+ <p>Seperate URLs by new line</p>
+  <textarea class="form-control" required="required" placeholder = "Example: www.yoursite.com/login or www.yoursite.com" rows="4" cols="50" name= "zonelockdown-url"></textarea>
+ 
+ 
+ </div>
+ <br>
+   <div class="form-group">
+ <p>IP Range</p>
+ <p>Separate IP Addresses by new line</p>
+ <textarea  class="form-control" required="required" placeholder="Example: 1.1.1.0/28 " rows="4" cols="50" name="value" name= "zonelockdown-ip"></textarea>
+ 
+ 
+ </div>
+  
+ <input type="hidden" name="zid" value="{{ $zone->id }}">
+ <div class="row">
+   <div class="col-lg-12 text-right">
+ <input class="btn btn-success" type="submit" name = 'zonelockdown-submit' value="Add Zone Lockdown Rule">
+ </div>
+ </div>
+ </form>
+ 
+ </div>
+ 
+ 
+ 
+ </div></div>
+ 
+ </div>
+ 
+ </div>
  
  
  
