@@ -33,9 +33,24 @@
 <br/>
 
 
+<form method="get" action="#">
 
+<select class="select2 form-control " id="minutes" name="time" >
+                        
+     <option value="01" >Last 01 Hour</option>
+  
+     <option  value="06">Last 6 Hours</option>
+     <option value="12">Last 12 Hours</option>
+     
+     <option  value="24">Last 24 Hours</option>
+     <option  value="week">Last 7 Days</option>
+     <option  value="month">Last Month</option>
 
-                    <div id="container"></div>
+</select>
+
+</form>
+
+                   
 
 				</div>
 
@@ -51,128 +66,11 @@
 				
 				<div class="panel-body">
 
-        <div class="container">
-  <div class="row">
-    <div class="col col-lg-6">
-    <h2><b>Ip Addresses</b></h2>
-   <?php $i=0; ?>
-    @foreach($duplicates as $row)
-       
-       <h6><b>{{ $row['client_ip'] }}</b></h6>  <p>{{ $row['count'] }} <script>
-  $( function() {
-    $( "#progressbar<?php echo $i;?>" ).progressbar({
-      value: <?php echo $row['count'];?>
-    });
-  } );
-  </script>
-
- 
-<div id="progressbar<?php echo $i;?>" style="
-    width: 50%;"></div></p>
-
-
-
-
-    <?php $i++;?>
-       
-       
-   @endforeach
-                  
-    </div>
-
-    <div class="col col-lg-6">
-    <h2><b>User Agents</b></h2>
-    <?php $j=505050; ?>
-    @foreach($accounts as $row1)
-       
-       <h6><b>{{ $row1['user_agent'] }}</b></h6>  <p>{{ $row1['counts'] }} <script>
-  $( function() {
-    $( "#progressbar<?php echo $j;?>" ).progressbar({
-      value: <?php echo $row1['counts'];?>
-    });
-  } );
-  </script>
-
- 
-<div id="progressbar<?php echo $j;?>" style="
-    width: 50%;"></div></p>
-
-
-
-
-    
-       <?php $j++; ?>
-       
-   @endforeach
-                  
-    </div>
-  </div>
-
-  <div class="row">
-  <div class="col col-lg-6">
-    <h2><b>Paths</b></h2>
-    <?php $j=5050504534; ?>
-    @foreach($paths as $row2)
-       
-       <h6><b>{{ $row2['uri'] }}</b></h6>  <p>{{ $row2['countes'] }} <script>
-  $( function() {
-    $( "#progressbar<?php echo $j;?>" ).progressbar({
-      value: <?php echo $row2['countes'];?>
-    });
-  } );
-  </script>
-
- 
-<div id="progressbar<?php echo $j;?>" style="
-    width: 50%;"></div></p>
-
-
-
-
-    
-       <?php $j++; ?>
-       
-   @endforeach
-                  
-    </div>
-
-
-
-    <div class="col col-lg-6">
-    <h2><b>Countries</b></h2>
-    <?php $j=5050504534; ?>
-    @foreach($paths as $row2)
-       
-       <h6><b>{{ $row2['uri'] }}</b></h6>  <p>{{ $row2['countes'] }} <script>
-  $( function() {
-    $( "#progressbar<?php echo $j;?>" ).progressbar({
-      value: <?php echo $row2['countes'];?>
-    });
-  } );
-  </script>
-
- 
-<div id="progressbar<?php echo $j;?>" style="
-    width: 50%;"></div></p>
-
-
-
-
-    
-       <?php $j++; ?>
-       
-   @endforeach
-                  
-    </div>
-
-
-</div>
-
-  </div>
+        
   
 
 
-
+        <div id="container"></div>
 
 
 					
@@ -207,9 +105,243 @@
 				</div>
 				
 				<div class="panel-body">
-					<center>
-                        <h1>Values Here</h1>
-                    </center>
+					<div class="container">
+  <div class="row">
+    <div class="col col-lg-6">
+    <h2><b>Ip Addresses</b></h2>
+   <?php $i=0; ?>
+    @foreach($duplicates as $row)
+    <div class=" col col-lg-12" >
+       <h6><b>{{ $row['client_ip'] }}</b></h6>  
+    
+</div>
+    <div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row['count']; if($count>=100) { echo "100"; }else{ echo $row['count']; } ?>%"  aria-valuemin="0" ><?php echo $row['count']; ?></div>
+</div>
+  
+  
+  
+
+
+
+
+    <?php $i++;?>
+       
+       
+   @endforeach
+                  
+    </div>
+
+    <div class="col col-lg-6">
+    <h2><b>User Agents</b></h2>
+    <?php $j=505050; ?>
+    @foreach($accounts as $row1)
+    <div class=" col col-lg-12" > 
+       <h6><b>{{ $row1['user_agent'] }}</b></h6>
+    
+</div>
+
+    <div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row1['counts']; if($count>=100) { echo "100"; }else{ echo $row1['counts']; }  ?>%"  aria-valuemin="0" ><?php echo $row1['counts']; ?></div>
+</div>
+   
+    
+    
+    
+    
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+  </div>
+
+  <div class="row">
+  <div class="col col-lg-6">
+    <h2><b>Paths</b></h2>
+    <?php $j=5050504534; ?>
+    @foreach($paths as $row2)
+    <div class=" col col-lg-10" >
+       <h6><b>{{ $row2['uri'] }}</b></h6>  
+</div>
+
+<div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row2['countes']; if($count>=100) { echo "100"; }else{ echo $row2['countes']; } ?>%"  aria-valuemin="0" ><?php echo $row2['countes']; ?></div>
+</div>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+
+    <div class="col col-lg-6">
+    <h2><b>Countries</b></h2>
+    <?php $j=50503545504534; ?>
+    @foreach($countries as $row3)
+    <div class=" col col-lg-10" > 
+       <h6><b><?php 
+    
+    $names = json_decode(file_get_contents("http://country.io/names.json"), true);
+echo $names[$row3['country']];
+    
+    
+    ?></b></h6> 
+
+</div>
+
+<div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['countees']; if($count>=100) { echo "100"; }else{ echo $row3['countees']; } ?>%"  aria-valuemin="0" ><?php echo $row3['countees']; ?></div>
+</div>
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+</div>
+
+
+
+<div class="row">
+
+  <div class="col col-lg-6">
+    <h2><b>Hosts</b></h2>
+    <?php $j=345050504534; ?>
+    @foreach($domain as $row3)
+    <div class=" col col-lg-12" >
+       <h6><b>{{ $row3['domain'] }}</b></h6> 
+</div>
+    
+    <div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['domains']; if($count>=100) { echo "100"; }else{ echo $row3['domains'];}  ?>%"  aria-valuemin="0" ><?php echo $row3['domains']; ?></div>
+</div>
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+
+    <div class="col col-lg-6">
+    <h2><b>HTTP Methods</b></h2>
+    <?php $j=50503545504534; ?>
+    @foreach($method as $row3)
+       
+    <div class=" col col-lg-12" >
+       <h6><b>{{ $row3['method'] }}</b></h6> 
+</div>
+    
+    <div class="progress col col-lg-10" >
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['methods']; if($count>=100) { echo "100"; }else{ echo $row3['methods'];}  ?>%"  aria-valuemin="0" ><?php echo $row3['methods']; ?></div>
+</div>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+</div>
+
+
+
+<!--div class="row">
+
+  <div class="col col-lg-6">
+    <h2><b>Paths</b></h2>
+    <?php $j=5050504534; ?>
+    @foreach($paths as $row2)
+       
+       <h6><b>{{ $row2['uri'] }}</b></h6>  <p>{{ $row2['countes'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $j;?>" ).progressbar({
+      value: <?php echo $row2['countes'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $j;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+
+    <div class="col col-lg-6">
+    <h2><b>Countries</b></h2>
+    <?php $j=50503545504534; ?>
+    @foreach($countries as $row3)
+       
+       <h6><b><?php 
+    
+    $names = json_decode(file_get_contents("http://country.io/names.json"), true);
+echo $names[$row3['country']];
+    
+    
+    ?></b></h6>  <p>{{ $row3['countees'] }} <script>
+  $( function() {
+    $( "#progressbar<?php echo $j;?>" ).progressbar({
+      value: <?php echo $row3['countees'];?>
+    });
+  } );
+  </script>
+
+ 
+<div id="progressbar<?php echo $j;?>" style="
+    width: 50%;"></div></p>
+
+
+
+
+    
+       <?php $j++; ?>
+       
+   @endforeach
+                  
+    </div>
+
+
+</div-->
+
+
+
+
+  </div>
 				</div>
 
             </div>
@@ -273,7 +405,8 @@
                                 <td>
                                     
                                     <button data-rulename="{{ $event->rule_name }}" 
-                                       data-date="{{ $event->timestamp }}" 
+                                       data-date="{{ $event->timestamp }}"
+                                       data-resource_id="{{ $event->resource_id }}" 
                                         data-action="{{ $event->action }}" 
                                          data-schememethod="{{ $event->scheme }} {{ $event->method }}" 
                                           data-uri="{{ $event->uri }}" 
@@ -281,7 +414,8 @@
                                             data-domain="{{ $event->domain }}" 
                                              data-clientip="{{ $event->client_ip }}" 
                                               data-country="{{ $event->country }}" 
-                                               data-useragent="@if($event->user_agent!="") {{ $event->user_agent }} @endif" 
+                                              data-scope="{{ $event->scope }}" 
+                                               data-useragent="@if($event->user_agent!='') {{ $event->user_agent }} @endif" 
                                          
                                               class="btn btn-info eventDetail">Details</button>
 
@@ -300,20 +434,6 @@
     </div>
     {{-- activity Logs Ends --}}
     
-             {{-- For Denial-of-service Attacks Migrated --}}
-			<div class="panel panel-default panel-main">
-				<div class="panel-heading">
-                    <h2 style="display: inline">Denial-of-service Attacks Migrated</h2>
-				</div>
-				
-				<div class="panel-body">
-					<center>
-                        <h1>Graph here</h1>
-                    </center>
-				</div>
-
-            </div>
-            {{-- Denial-of-service Attacks Migrated Ends --}}
 </div>
 {{-- 1st pane end --}}
 
@@ -322,30 +442,26 @@
    <div class="panel panel-default panel-main">
       <div class="panel-body  row">
           <div class="col-lg-8">
-          <div  class="setting-title" ><h3>
- Web Application Firewall 
-    
-    
-</h3>
+          <div  class="setting-title" ><h3>Web Application Firewall</h3>
 
 
 
 
-  <p>Enable / Disable Web Application Firewall </p>
+  <p>Provides enhanced security through a built-in ruleset to stop a wide range of application attacks.</p>
 
 
-  <p class="text-info">This setting was last changed 2 days ago</p>
+  <span>This setting was last changed 4 years ago</span>
 
 
 </div>
 
-          <?php echo  $waf=$zoneSetting->where('name','waf')->first()->value; ?>
+          <?php $waf=$zoneSetting->where('name','waf')->first()->value; ?>
           </div>
           <div class="col-lg-4 right ">
            <div  class="setting-title" >
 
            </div>
-          <select settingid="{{$zoneSetting->where('name','waf')->first()->id }}"  style="width: 200px;" class="select2 changeableSetting" id="waf" name="waf">
+          <select settingid="{{$zoneSetting->where('name','waf')->first()->id }}" class="select2 changeableSetting" id="waf" name="waf">
                         <option {{ $waf === "off" ? "selected":"" }}  value="off">OFF</option>
                         <option {{ $waf === "on" ? "selected":"" }} value="on">ON</option>
                         
@@ -419,7 +535,7 @@
           @endif
      
 </div>
-
+<br>
       <div class="expandable wafGroups">
       <table class="table table-bordered table-striped table-condensed">
            <thead>
@@ -508,13 +624,27 @@
           </div>
           {{-- 2nd Panel End --}}
           <div class="tab-pane fade" id="tab3default">
-		         <div class="panel-heading"><h2 style="display: inline">Firewall for {{ $records->first()->zone->name }}</h2>
-        <div class="pull-right">
-      <a class="btn btn-primary" id="add_rule" data-toggle="modal" > Add New Rule</a>
-
-    </div>
+		         <div class="panel-heading">
+              <div class="pull-left">    
+                <h2>Firewall Rules</h2>
+                  {{-- $records->first()->zone->name --}}
+                <p>
+                  Controlling incoming traffic to your zone by filtering requests based on location, IP address, user agents, URI, and more.
+                </p>
+            </div>
+            <div class="pull-right">
+            <br>
+            <br>
+            {{-- 
+              <a class="btn btn-primary" id="add_rule" data-toggle="modal">Create a Firewall Rule</a> --}}
+            </div>
   </div>
-
+  <div class="clear-fix"></div>
+<br>
+<br>
+<br>
+<br>
+  <div class="panel-body">
       <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
 
         <div class="panel-body table-responsive">
@@ -524,7 +654,7 @@
                     <tr>
                         <th >Value</th>
                         <th>Action</th>
-						<th> Notes </th>
+				            		<th> Notes </th>
                         <th>&nbsp;</th>
                     </tr>
                 </thead>
@@ -533,29 +663,21 @@
                         @foreach ($rules as $rule)
                             <tr id="rule_{{ $rule->id }}" data-entry-id="{{ $rule->id }}">
                                 <td>{{ $rule->value }}</td>
-
-                                 
-                                
                                 <td>
-
                               
                 <select style="width:200px;" class="select2 firewallAction" id="{{ $rule->id }}" name="firewallAction">
-                <option {{ $rule->mode  == "whitelist" ? "selected":"" }} value="whitelist">Whitelist</option>
-                <option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
-                <option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
-                <option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
-               
-            </select>
-                                    </td>
+                  <option {{ $rule->mode  == "whitelist" ? "selected":"" }} value="whitelist">Whitelist</option>
+                  <option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
+                  <option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
+                  <option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
+                </select>
+                              </td>
                               <td style="color:grey; font-size:12px; width:40%;">{{ $rule->notes }}</td>
-                                <td>
-                                    <a class="deleteRule" rule-id="{{$rule->id}}" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-remove"></i>
+                              <td>
+                                    <a class="deleteRule" rule-id="{{$rule->id}}" class="btn btn-danger">
+                                    <i  class="glyphicon glyphicon-remove text-danger"></i>
                                     </a>
-
-
-                                </td>
-
+                              </td>
                             </tr>
                         @endforeach
                     @else
@@ -566,21 +688,76 @@
                 </tbody>
             </table>
         </div>
+      </div>
 </div>
         {{-- 3rd Panel Ends --}}
-          <div class="tab-pane fade" id="tab4default">
+        <div class="tab-pane fade" id="tab4default">
               {{-- For IP Access Rules --}}
-			<div class="panel panel-default panel-main">
-				<div class="panel-heading">
-                    <h2 style="display: inline">IP Access Rules</h2>
-				</div>
+			<div class="panel panel-default panel-main container-fluid">
 				
-				<div class="panel-body">
-					<center>
-                        <h1>Values Here</h1>
-                    </center>
-				</div>
+              <div class="pull-left">    
+                <h2>IP Access Rules</h2>
+                  {{-- $records->first()->zone->name --}}
+                <p>
+                  IP Access Rules can be IP address, IP address range, Autonomous System Number (ASN) or country.
+                </p>
+            </div>
+            <div class="pull-right">
+            <br>
+            <br>
+              <a class="btn btn-primary" id="add_rule" data-toggle="modal">Add Rule</a>
+            </div>
 
+  <div class="clear-fix"></div>
+<br>
+<br>
+<br>
+<br>
+  <div class="panel-body">
+      <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+
+        <div class="panel-body table-responsive">
+        
+            <table class="table table-bordered table-striped table-condensed">
+                <thead>
+                    <tr>
+                        <th >Value</th>
+                        <th>Action</th>
+				            		<th> Notes </th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (count($rules) > 0)
+                        @foreach ($rules as $rule)
+                            <tr id="rule_{{ $rule->id }}" data-entry-id="{{ $rule->id }}">
+                                <td>{{ $rule->value }}</td>
+                                <td>
+                              
+                <select style="width:200px;" class="select2 firewallAction" id="{{ $rule->id }}" name="firewallAction">
+                  <option {{ $rule->mode  == "whitelist" ? "selected":"" }} value="whitelist">Whitelist</option>
+                  <option {{ $rule->mode == "block" ? "selected":"" }} value="block">Block</option>
+                  <option {{ $rule->mode == "challenge" ? "selected":"" }} value="challenge">Challenge</option>
+                  <option {{ $rule->mode == "js_challenge" ? "selected":"" }} value="js_challenge">JS Challenge</option>
+                </select>
+                              </td>
+                              <td style="color:grey; font-size:12px; width:40%;">{{ $rule->notes }}</td>
+                              <td>
+                                    <a class="deleteRule" rule-id="{{$rule->id}}" class="btn btn-danger">
+                                    <i  class="glyphicon glyphicon-remove text-danger"></i>
+                                    </a>
+                              </td>
+                            </tr>
+                        @endforeach
+                    @else
+                        <tr>
+                            <td colspan="9">@lang('global.app_no_entries_in_table')</td>
+                        </tr>
+                    @endif
+                </tbody>
+            </table>
+        </div>
+      </div>
             </div>
             {{-- IP Access Rules Ends --}}
 
@@ -598,26 +775,20 @@
 
             {{-- For Rate Limiting --}}
 			<div class="panel panel-default panel-main">
-				Rate Limiting
-				<div class="panel-body">
-					<center>
-                        <h1>Settings Here</h1>
-                    </center>
+      <div class="panel-body">
+          <div class="pull-left">
+            <h2>Rate Limiting</h2>
+            <p>Protect your site or API from malicious traffic by blocking client IP addresses that hit a URL pattern<br> and exceed a threshold you define. Your existing Rate Limiting Rules are listed below. This feature<br> is a usage-based product. Learn more about how billing works for Rate Limiting.</p>
+          </div>
+          <div class="pull-right">
+            <br>
+            <br>
+              <a class="btn btn-primary"> Add Rate Limit</a>
+            </div>
 				</div>
-
             </div>
             {{-- Rate Limiting Ends --}}
 
-            {{-- For User Agent Blocking --}}
-			<div class="panel panel-default panel-main">
-				User Agent Blocking
-				<div class="panel-body">
-					<center>
-                        <h1>Settings Here</h1>
-                    </center>
-				</div>
-
-            </div>
             {{-- For User Agent Blocking --}}
 	<div class="panel panel-default panel-main">
         <div class = "container-fluid">
@@ -683,16 +854,22 @@
                                 </td>
                               
                                 <td>
-                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
-
+                                    
+                                  <div class="pull-top">
+                                  <center>  
                                   <a style="margin:20px;"  data-toggle="modal" data-target="#rule-edit-modal_{{ $rule->id }}" class="editUaRule" rule-id="{{$rule->id}}" class="btn btn-secondary">
                                     <i class="glyphicon glyphicon-edit"></i>
                                     </a>
                                   
-                                    <a class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-remove"></i>
+                                    <a class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-danger">
+                                    <i class="glyphicon glyphicon-remove text-danger"></i>
                                     </a>
+                                  </center>
+                                  </div>
+                                    <div class="pull-bottom">
 
+                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
+                                  </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -773,16 +950,20 @@
                                 </td>
                               
                                 <td>
-                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
-
+                                  <div class="pull-top">
+                                  <center>
                                   <a style="margin:20px;"  data-toggle="modal" data-target="#rule-edit-modal_{{ $rule->id }}" class="editUaRule" rule-id="{{$rule->id}}" class="btn btn-secondary">
                                     <i class="glyphicon glyphicon-edit"></i>
                                     </a>
                                   
-                                    <a class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-default">
-                                    <i class="glyphicon glyphicon-remove"></i>
+                                    <a style ="color: red;" class="deleteUaRule" rule-id="{{$rule->id}}" class="btn btn-danger">
+                                    <i  class="glyphicon glyphicon-remove text-danger"></i>
                                     </a>
-
+                                  </center>
+                                  </div>
+                                <div class="pull-top">
+                                    <input class="uaRuleStatus"  record-id="{{$rule->id}}"  type="checkbox" data-onstyle="success" data-offstyle="default" {{ $rule->paused == "0" ? "checked" : "" }} data-toggle="toggle" data-on="<i class='fa fa-check'></i> Active" data-off="<i class='fa fa-exclamation'></i> Paused">
+                                </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -809,209 +990,150 @@
 </div>
 
 
-
 <div class="modal" id="eventModal" data-reveal>
 
-    <div class="modal-dialog modal-lg" >
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">Event Details</h4>
-       </div>
-       <div class="modal-body">
-       <div class="row">
-         
-         <div class="col-lg-5">
-           <label>Description</label>
-          <div id="rulename"></div>
-         </div>
-         <div class="col-lg-4">
-           <label>Date</label>
-          <div id="date"></div>
-         </div>
-         <div class="col-lg-3">
-            <label>Action Taken</label>
-          <div id="action"></div>
- 
-         </div>
- 
-       </div>
- 
-       <div style="margin-top: 10px" class="row">
-         
-         <div class="col-lg-5">
-           <label id="schememethod"></label>
-          <div id="domain"></div>
-         </div>
-         <div class="col-lg-4">
-           <label>URI</label>
-          <div id="uri"></div>
-         </div>
-         <div class="col-lg-3">
-         
-           <label>Client IP</label>
-          <div id="clientip"></div>
-         
- 
-         </div>
- 
-       </div>
- 
- 
-       <div style="margin-top: 10px" class="row">
-         
-        
-         <div class="col-lg-5">
-           <label>Country</label>
-          <div id="country"></div>
-         </div>
- 
-         <div class="col-lg-7">
-            <label>User Agent</label>
-          <div id="useragent"></div>
- 
-         </div>
-        
- 
-       </div>
- 
- 
-       <div style="padding-top: 20px;" class="row">
-       <div class="col-lg-12 text-right pull-right">
-             <input style="display: none;" class="btn btn-success createRuleFromEvent" name="" value="Create Firewall Rule Based on this Event" type="submit">
-         </div>
-         </div>
- </div></div>
- 
- </div>
- </div>
- 
- 
- 
- 
- 
- 
- 
- 
-     @else
- 
- 
-       
-     @endif
- 
-  
- 
- 
- 
- </div></div>
- 
- 
- <div class="modal" id="zonelockdown-modal" data-reveal>
- 
-    <div class="modal-dialog modal-lg" >
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">Add Zone Lockdown Rule</h4>
-       </div>
-       <div class="modal-body">
- 
-   
-    
-     <div class="">
- 
- <form method="post" action="addUaRule" id="uaRule" class="uaRuleForm">
-   <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
- 
-   <div class="form-group">
- <p>Name</p>
- <input class="form-control" required="required" placeholder="Example: Allow traffic from Office IP address" name="zonelockdown-name"  type="text">
- </div>
- 
- <br>
+<div class="modal-dialog modal-lg" >
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     <h4 class="modal-title">Event Details</h4>
+   </div>
+   <div class="modal-body">
+   <div class="row">
+     
+     <div class="col-lg-5">
+       <label>Description</label>
+      <div id="rulename"></div>
+     </div>
+     
+     <div class="col-lg-4">
+       <label>Date</label>
+      <div id="date"></div>
+     </div>
+     <div class="col-lg-3">
+        <label>Action Taken</label>
+      <div id="action"></div>
 
- <div class="form-group">
- <p>URLs</p>
- <p>Seperate URLs by new line</p>
-  <textarea class="form-control" required="required" placeholder = "Example: www.yoursite.com/login or www.yoursite.com" rows="4" cols="50" name= "zonelockdown-url"></textarea>
+     </div>
+
+   </div>
+
+   <div style="margin-top: 10px" class="row">
+     
+     <div class="col-lg-5">
+       <label id="schememethod"></label>
+      <div id="domain"></div>
+     </div>
+     <div class="col-lg-4">
+       <label>URI</label>
+      <div id="uri"></div>
+     </div>
+     <div class="col-lg-3">
+     
+       <label>Client IP</label>
+      <div id="clientip"></div>
+     
+
+     </div>
+
+   </div>
+
+
+   <div style="margin-top: 10px" class="row">
+     
+    
+     <div class="col-lg-5">
+       <label>Country</label>
+      <div id="country"></div>
+     </div>
+
+     <div class="col-lg-7">
+        <label>User Agent</label>
+      <div id="useragent"></div>
+
+     </div>
+    
+     
+   </div>
+   <div class="col-lg-5">
+       <label>Ray Id</label>
+      <div id="scope"></div>
+     </div>
+
+   <div style="padding-top: 20px;" class="row">
+   <div class="col-lg-12 text-right pull-right">
+         <input style="display: none;" class="btn btn-success createRuleFromEvent" name="" value="Create Firewall Rule Based on this Event" type="submit">
+     </div>
+     </div>
+</div></div>
+
+</div>
+</div>
+
+
+ @else
+
+
+   
+ @endif
+
+
+</div></div>
+
  
- 
- </div>
- <br>
-   <div class="form-group">
- <p>IP Range</p>
- <p>Separate IP Addresses by new line</p>
- <textarea  class="form-control" required="required" placeholder="Example: 1.1.1.0/28 " rows="4" cols="50" name="value" name= "zonelockdown-ip"></textarea>
- 
- 
- </div>
-  
- <input type="hidden" name="zid" value="{{ $zone->id }}">
- <div class="row">
-   <div class="col-lg-12 text-right">
- <input class="btn btn-success" type="submit" name = 'zonelockdown-submit' value="Add Zone Lockdown Rule">
- </div>
- </div>
- </form>
- 
- </div>
- 
- 
- 
- </div></div>
- 
- </div>
- 
- </div>
- 
- 
- 
- <!-- Modal start -->
+<!-- Modal start -->
  <div id="add_rule_modal" class="modal fade add_rule_modal" tabindex="-1" role="dialog" aria-labelledby="Add Rule">
    <div class="modal-dialog modal-lg" >
      <div class="modal-content">
        <div class="modal-header">
          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">Add Access Rule</h4>
+         <h4 class="modal-title">Add IP Access Rule</h4>
        </div>
        <div class="modal-body">
-         <form id="accessRule">
-   <div class="row">
-   {{ csrf_field() }}
-           <input type="hidden" name="zid" value="{{ $zone->id }}">
-         <div class="col-lg-2">
-   <select name="target" id="accessRuleTarget" class="select2 form-controls">
-     <option value="ip">IP Address</option>
-     <option value="ip_range">IP Range </option>
+        <div class=" container-fluid"> 
+         <form id="accessRule" class="form-group">
+   
+     {{ csrf_field() }}
+    <input type="hidden" name="zid" value="{{ $zone->id }}">
+<div class="form-group">
+   <select name="target" id="accessRuleTarget" class="select2 form-control">
+      <option value="ip">IP Address</option>
+      <option value="ip_range">IP Range </option>
       <option value="asn">ASN</option>
-     
-     <option value="country">Country</option>
+      <option value="country">Country</option>
    </select>
  </div>
-   <div class="valueDiv col-lg-3">
-   <input type="text" name="value" class=" form-control">
+ <br>
+   <div class="valueDiv form-group">
+   <input type="text" name="value" class="form-control">
    
  </div>
- 
- <div class="form-group col-lg-2" >
-                    <select  class="select2" name="mode">
-                 <option  value="whitelist">Whitelist</option>
-                 <option  value="block">Block</option>
-                 <option  value="challenge">Challenge</option>
-                 <option  value="js_challenge">JS Challenge</option>
-                
-             </select>
-                   </div>
- <div class="form-group col-lg-3" >
+ <br>
+
+ <div class="form-group" >
+    <select  class="select2 form-control" name="mode">
+      <option  value="whitelist">Whitelist</option>
+      <option  value="block">Block</option>
+      <option  value="challenge">Challenge</option>
+      <option  value="js_challenge">JS Challenge</option>
+    </select>
+  </div>
+  <br>
+ <div class="form-group" >
  
    <input type="text" class="form-control" placeholder="note (optional)" name="note">
  
  </div>
- <div class="form-group col-lg-2" >
- <input type="submit" value="Add Access Rule" class="form-control" name="">
+ <br>
+ 
+ <div class="form-group" >
+    <center>
+      <input type="submit" value="Add Access Rule" class="form-control btn btn-success" name="">
+    </center>
  </div>
  </div>
  </form>
+</div>
        </div>
      </div><!-- /.modal-content -->
    </div><!-- /.modal-dialog -->
@@ -1019,332 +1141,281 @@
  <!-- Modal end -->
  
  
- 
- 
- 
- <div class="modal" id="ua-rule-modal" data-reveal>
- 
-    <div class="modal-dialog modal-lg" >
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">Add User Agent Blocking Rule</h4>
-       </div>
-       <div class="modal-body">
- 
-   
-    
-     <div class="">
- 
- <form method="post" action="addUaRule" id="uaRule" class="uaRuleForm">
-   <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
- 
-   <div class="form-group">
- <p>Name/Description</p>
- <input class="form-control" required="" placeholder="Example: Block Internet Explorer" name="description"  type="text">
- 
- 
- </div>
- <br>
-   <div class="form-group">
- <p>Action</p>
-  <select style="width:100%;" class="select2 form-control"  name="mode">
-                 
-                 <option  value="block">Block</option>
-                 <option value="challenge">Challenge</option>
-                 <option  value="js_challenge">JS Challenge</option>
-                
-             </select>
- 
- 
- </div>
- <br>
-   <div class="form-group">
- <p>User Agent</p>
- <textarea  class="form-control" required="required" placeholder="Example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4" name="value"></textarea>
- 
- 
- </div>
-  
- <input type="hidden" name="zid" value="{{ $zone->id }}">
- <div class="row">
-   <div class="col-lg-12 text-right">
- <input class="btn " type="submit" value="Add Rule">
- </div>
- </div>
- </form>
- 
- </div>
- 
- 
- 
- </div></div>
- 
- </div>
- 
- </div>
- 
- 
- 
- 
- 
-  @if (count($uaRules) > 0)
-    @foreach ($uaRules as $rule)
-                           
- 
- 
- <div class="modal ruleEditModal" id="rule-edit-modal_{{ $rule->id }}"  data-reveal>
- 
-    <div class="modal-dialog modal-lg" >
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">Edit User Agent Blocking Rule</h4>
-       </div>
-       <div class="modal-body">
- 
-   
-    
-     <div class="">
- 
- <form method="post" action="addUaRule" id="uaRule" class="uaRuleEditForm">
-   <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
- 
-   <div class="form-group">
- <p>Name/Description</p>
- <input value="{{ $rule->description }}"  class="form-control" required="" placeholder="Example: Block Internet Explorer" name="description"  type="text">
- 
- 
- </div>
- <br>
-   <div class="form-group">
- <p>Action</p>
-  <select style="width:100%;" class="select2 form-control"  name="mode">
-                 
-                 <option @if($rule->mode=="block") selected="selected" @endif  value="block">Block</option>
-                 <option @if($rule->mode=="challenge") selected="selected" @endif    value="challenge">Challenge</option>
-                 <option @if($rule->mode=="js_challenge") selected="selected" @endif    value="js_challenge">JS Challenge</option>
-                
-             </select>
- 
- 
- </div>
- <br>
-   <div class="form-group">
- <p>User Agent</p>
- <textarea  class="form-control" required="required" placeholder="Example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4" name="value">{{ $rule->value }}</textarea>
- 
- 
- </div>
-  
- <input type="hidden" name="zid" value="{{ $zone->id }}">
- <input type="hidden" name="ruleid" value="{{ $rule->id }}">
- <div class="row">
-   <div class="col-lg-12 text-right">
- <input class="btn " type="submit" value="Edit Rule">
- </div>
- </div>
- </form>
- 
- </div>
- 
- 
- 
- </div></div>
- 
- </div>
- 
- </div>
- 
- 
- 
- @endforeach
- 
- @endif
- 
- 
- 
- 
- <div class="modal" id="WAFGroupDetailsModal" data-reveal>
- 
-    <div class="modal-dialog modal-ip" >
-     <div class="modal-content">
-       <div class="modal-header">
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-         <h4 class="modal-title">WAF Group Details</h4>
-       </div>
-       <div id="WAFGroupDetailsModalBody" class="modal-body">
- 
- 
- </div></div>
- 
- </div>
- </div>
-
- <script type="text/javascript">
-
- Highcharts.chart('container', {
-    chart: {
-        type: 'area'
-    },
-    title: {
-        text: ''
-    },
-    subtitle: {
-        text: ''
-    },
-    xAxis: {
-        categories: [<?php
-
-
-$challenge=0;
-$drop=0;
-$allow=0;
-$block=0;
-
-
-echo "date";
-          
-          foreach($events as $evend ){
-
-   // $date=$evend->timestamp;
-    // echo date('H:i:s',$date) ;
-    //echo now() ;
-   // echo "Date";
-     
-             }
-          
-          
-          
-          ?>],
-        tickmarkPlacement: 'on',
-        title: {
-            enabled: false
-        }
-    },
-    yAxis: {
-        title: {
-            text: 'Events'
-        },
-        labels: {
-            formatter: function () {
-                return this.value / 1000;
-            }
-        }
-    },
-    tooltip: {
-        split: true,
-        valueSuffix: ' '
-    },
-    plotOptions: {
-        area: {
-            stacking: 'normal',
-            lineColor: '#666666',
-            lineWidth: 1,
-            marker: {
-                lineWidth: 1,
-                lineColor: '#666666'
-            }
-        }
-    },
-    series: [{
-        name: 'Challenge',
-        data: [<?php  foreach($events as $evend ){
-
-      if($evend->action=='challenge'){
-
-
-         $challenge++;
-
-
-          }
 
 
 
 
 
+<div class="modal" id="ua-rule-modal" data-reveal>
+
+<div class="modal-dialog modal-lg" >
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     <h4 class="modal-title">Add User Agent Blocking Rule</h4>
+   </div>
+   <div class="modal-body">
 
 
+
+ <div class="">
+
+<form method="post" action="addUaRule" id="uaRule" class="uaRuleForm">
+<input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+
+<div class="form-group">
+<p>Name/Description</p>
+<input class="form-control" required="" placeholder="Example: Block Internet Explorer" name="description"  type="text">
+
+
+</div>
+<br>
+<div class="form-group">
+<p>Action</p>
+<select style="width:100%;" class="select2 form-control"  name="mode">
+             
+             <option  value="block">Block</option>
+             <option value="challenge">Challenge</option>
+             <option  value="js_challenge">JS Challenge</option>
+            
+         </select>
+
+
+</div>
+<br>
+<div class="form-group">
+<p>User Agent</p>
+<textarea  class="form-control" required="required" placeholder="Example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4" name="value"></textarea>
+
+
+</div>
+
+<input type="hidden" name="zid" value="{{ $zone->id }}">
+<div class="row">
+<div class="col-lg-12 text-right">
+<input class="btn btn-success" type="submit" value="Add Rule">
+</div>
+</div>
+</form>
+
+</div>
+
+
+
+</div></div>
+
+</div>
+
+</div>
+
+
+
+
+
+@if (count($uaRules) > 0)
+@foreach ($uaRules as $rule)
+                       
+
+
+<div class="modal ruleEditModal" id="rule-edit-modal_{{ $rule->id }}"  data-reveal>
+
+<div class="modal-dialog modal-lg" >
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     <h4 class="modal-title">Edit User Agent Blocking Rule</h4>
+   </div>
+   <div class="modal-body">
+
+
+
+ <div class="">
+
+<form method="post" action="addUaRule" id="uaRule" class="uaRuleEditForm">
+<input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+
+<div class="form-group">
+<p>Name/Description</p>
+<input value="{{ $rule->description }}"  class="form-control" required="" placeholder="Example: Block Internet Explorer" name="description"  type="text">
+
+
+</div>
+<br>
+<div class="form-group">
+<p>Action</p>
+<select style="width:100%;" class="select2 form-control"  name="mode">
+             
+             <option @if($rule->mode=="block") selected="selected" @endif  value="block">Block</option>
+             <option @if($rule->mode=="challenge") selected="selected" @endif    value="challenge">Challenge</option>
+             <option @if($rule->mode=="js_challenge") selected="selected" @endif    value="js_challenge">JS Challenge</option>
+            
+         </select>
+
+
+</div>
+<br>
+<div class="form-group">
+<p>User Agent</p>
+<textarea  class="form-control" required="required" placeholder="Example: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/603.2.4 (KHTML, like Gecko) Version/10.1.1 Safari/603.2.4" name="value">{{ $rule->value }}</textarea>
+
+
+</div>
+
+<input type="hidden" name="zid" value="{{ $zone->id }}">
+<input type="hidden" name="ruleid" value="{{ $rule->id }}">
+<div class="row">
+<div class="col-lg-12 text-right">
+<input class="btn " type="submit" value="Edit Rule">
+</div>
+</div>
+</form>
+
+</div>
+
+
+
+</div></div>
+
+</div>
+
+</div>
+
+
+
+@endforeach
+
+@endif
+
+
+
+<div class="modal" id="zonelockdown-modal" data-reveal>
+
+<div class="modal-dialog modal-lg" >
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     <h4 class="modal-title">Add Zone Lockdown Rule</h4>
+   </div>
+   <div class="modal-body">
+
+
+
+ <div class="">
+
+<form method="post" action="addUaRule" id="uaRule" class="uaRuleForm">
+<input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+
+<div class="form-group">
+<p>Name</p>
+<input class="form-control" required="required" placeholder="Example: Allow traffic from Office IP address" name="zonelockdown-name"  type="text">
+</div>
+
+<br>
+
+<div class="form-group">
+<p>URLs</p>
+<p>Seperate URLs by new line</p>
+<textarea class="form-control" required="required" placeholder = "Example: www.yoursite.com/login or www.yoursite.com" rows="4" cols="50" name= "zonelockdown-url"></textarea>
+
+
+</div>
+<br>
+<div class="form-group">
+<p>IP Range</p>
+<p>Separate IP Addresses by new line</p>
+<textarea  class="form-control" required="required" placeholder="Example: 1.1.1.0/28 " rows="4" cols="50" name="value" name= "zonelockdown-ip"></textarea>
+
+
+</div>
+
+<input type="hidden" name="zid" value="{{ $zone->id }}">
+<div class="row">
+<div class="col-lg-12 text-right">
+<input class="btn btn-success" type="submit" name = 'zonelockdown-submit' value="Add Zone Lockdown Rule">
+</div>
+</div>
+</form>
+
+</div>
+
+
+
+</div></div>
+
+</div>
+
+</div>
+
+
+<div class="modal" id="WAFGroupDetailsModal" data-reveal>
+
+<div class="modal-dialog modal-ip" >
+ <div class="modal-content">
+   <div class="modal-header">
+     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+     <h4 class="modal-title">WAF Group Details</h4>
+   </div>
+   <div id="WAFGroupDetailsModalBody" class="modal-body">
+
+
+</div></div>
+
+</div>
+</div>
+
+
+<script type="text/javascript">
+
+Highcharts.chart('container', { 
+ chart: {
+     type: 'line'
+ },
+ title: {
+     text: 'Events By Action' 
+ },
+ subtitle: {
+     text: 'Source: WorldClimate.com'
+ }, 
+ xAxis: {
+     categories: [ <?php foreach ($period as $key )  echo $key.',';   ?> ]
+ },
+ yAxis: {
+     title: {
+         text: 'Number Of Events'
+     }
+ },
+ plotOptions: {
+     line: {
+         dataLabels: {
+             enabled: true
+         },
+         enableMouseTracking: false
+     }
+ },
+ series: [ 
+ {
+     name: 'Challenge',
+     data: [<?php foreach ($challenge as $key )  {  echo $key.',' ;  } ?>]
+ }, {
+     name: 'Log/Simulate',
+     data: [<?php foreach ($log as $key )  {  echo $key.',' ;  } ?>]
+ },
+ {
+     name: 'Allow',
+     data: [<?php foreach ($allow as $key )  {  echo $key.',' ;  } ?>]
+ }, {
+     name: 'Drop',
+     data: [<?php foreach ($drop as $key )  {  echo $key.',' ;  } ?>]
  }
- 
- 
- echo $challenge;?>]
-    }, {
-        name: 'Log/Simulate',
-        data: [<?php  foreach($events as $evend ){
 
-if($evend->action=='drop'){
+ ]
+})
 
-
-   $drop++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $drop;?>]
-    }, {
-        name: 'Allow',
-        data: [<?php  foreach($events as $evend ){
-
-if($evend->action=='allow'){
-
-
-   $allow++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $allow;?>]
-    }, {
-        name: 'Block',
-        data: [<?php  foreach($events as $evend ){
-
-if($evend->action=='block'){
-
-
-   $block++;
-
-
-    }
-
-
-
-
-
-
-
-}
-
-
-echo $block;?>]
-    }]
-});
 
 </script>
 
  
 @stop
-
-
-
 
 
 @section('javascript')

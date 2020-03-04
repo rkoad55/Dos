@@ -139,6 +139,7 @@ Route::get('{zone}/loadBalancers', 'Admin\ZoneController@loadBalancers')->name('
     Route::post('{zone}/analytics','Admin\AnalyticsController@index');
       Route::post('{zone}/spanalytics','Admin\SpAnalyticsController@index');
      Route::get('{zone}/firewall','Admin\FirewallController@index');
+     Route::get('{zone}/firewall#','Admin\FirewallController@index');
     Route::delete('{zone}/rule/delete','Admin\FirewallController@destroy');
 
     Route::delete('{zone}/uaRule/delete','Admin\FirewallController@destroyUaRule');

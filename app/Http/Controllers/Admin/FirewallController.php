@@ -25,6 +25,7 @@ use App\Jobs\FetchUaRules;
 use App\Jobs\UpdateSPWAF;
 use App\Jobs\DeleteFirewallRule;
 use App\Jobs\FetchWAFEvents;
+use App\wafEvent;
 
 
 use App\Jobs\DeleteUaRule;
@@ -36,7 +37,7 @@ class FirewallController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function index($zone=Null)
+    public function index($zone , Request $req)
     {   
 		
 		// ini_set('memory_limit', '-1');
@@ -125,7 +126,7 @@ class FirewallController extends Controller
          $wafPackages=$zone->wafPackage;
           $events=$zone->wafEvent->sortBy('timestamp')->take(50000);
 
-     
+          $used_id=$zone->id;
           // $count = DB::table('waf_events')->distinct('client_ip')->count('client_ip');
 
 
@@ -138,6 +139,7 @@ class FirewallController extends Controller
 
          $duplicates = DB::table('waf_events')
          ->select('client_ip', DB::raw('COUNT(client_ip) as `count` '))
+         ->where('zone_id',$used_id )
          ->groupBy('client_ip')
          ->havingRaw('COUNT(client_ip) > 1')
          ->orderBy('count', 'DESC')
@@ -149,6 +151,7 @@ class FirewallController extends Controller
 
          $accounts = DB::table('waf_events')
          ->select('user_agent', DB::raw('COUNT(client_ip) as `counts` '))
+         ->where('zone_id',$used_id )
          ->groupBy('user_agent')
          ->havingRaw('COUNT(user_agent) > 1')
          ->orderBy('counts', 'DESC')
@@ -160,6 +163,7 @@ class FirewallController extends Controller
 
          $paths = DB::table('waf_events')
          ->select('uri', DB::raw('COUNT(uri) as `countes` '))
+         ->where('zone_id',$used_id )
          ->groupBy('uri')
          ->havingRaw('COUNT(uri) > 1')
          ->orderBy('countes', 'DESC')
@@ -170,17 +174,289 @@ class FirewallController extends Controller
          $paths=json_decode($paths,true);
 
          $countries = DB::table('waf_events')
-         ->select('uri', DB::raw('COUNT(uri) as `countes` '))
-         ->groupBy('uri')
-         ->havingRaw('COUNT(uri) > 1')
-         ->orderBy('countes', 'DESC')
+         ->select('country', DB::raw('COUNT(country) as `countees` '))
+         ->where('zone_id',$used_id )
+         ->groupBy('country')
+         ->havingRaw('COUNT(country) > 1')
+         ->orderBy('countees', 'DESC')
          ->take(5)
          ->get();
 
 
          $countries=json_decode($countries,true);
          
-//dd($paths);
+
+         $domain = DB::table('waf_events')
+         ->select('domain', DB::raw('COUNT(domain) as `domains` '))
+         ->where('zone_id',$used_id )
+         ->groupBy('domain')
+         ->havingRaw('COUNT(domain) > 1')
+         ->orderBy('domains', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $domain=json_decode($domain,true);
+
+
+         $method = DB::table('waf_events')
+         ->select('method', DB::raw('COUNT(method) as `methods` '))
+         ->where('zone_id',$used_id )
+         ->groupBy('method')
+         ->havingRaw('COUNT(method) > 1')
+         ->orderBy('methods', 'DESC')
+         ->take(5)
+         ->get();
+
+
+         $method=json_decode($method,true);
+
+
+
+
+
+         $eve = json_decode($events ,true);
+         $period = array();
+
+
+           // $request_cached_uncached[$key]['period'] = dateFormatting(date("Y-m-d H:i:s", strtotime($value->since)),hour);
+         // dd($eve);
+         $challenge = array();
+         $block = array();
+         $allow = array();
+         $log = array();
+
+         for($i = 0 ; $i < count($eve) ; $i++){
+               $a =  substr($eve[$i]['timestamp'], -7,-5);
+               $period[$i] =  $a;
+           }
+       
+   $unique =  array_unique($period);
+   $key = array_keys($unique);
+   // print_r($unique[1]); 
+ // dd(count($period));
+   end($unique);
+   $index = key($unique);
+
+   $key1 = count($key);
+
+// dd($key);   
+$find =array();
+$find1 =array();
+
+$challenge =array();
+$allow =array();
+$drop =array();
+$log =array(); 
+// dd($zone->id);
+
+$counter = 0 ;
+           // echo  count($drop);
+
+
+
+$like_query = array();
+
+       if($req->time !="" || $req->time > 0){
+           $time =  $req->time; 
+           if($time == "month" ){
+               $arr = array();
+
+              for($i = 0 ;$i < 24 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-30 Day',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+            else {
+                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-30 Day',strtotime($converted)));
+                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                  }
+               }
+           }
+           else if($time == "week" ){
+                     $arr = array();
+            for($k = 1 ; $k <= 7 ; $k++ ){         
+              for($i = 0 ;$i < 24 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-$k Day',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+            else {
+                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-$k Day',strtotime($converted)));
+                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                       }
+                   }
+               }
+           }
+           else if($time > 0){
+               
+               if($time == 24){
+           
+                   $arr = array();
+
+              for($i = 0 ;$i < 24 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-1 Hour',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+            else {
+                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                  }
+               }
+
+           }     
+               else if($time == 12){
+                       $arr = array();
+
+              for($i = 0 ;$i < 12 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-1 Hour',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+               else {
+                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                       }
+                   }
+               }
+               else if($time == 6){
+                    $arr = array();
+
+              for($i = 0 ;$i < 6 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-1 Hour',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+               else {
+                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                       }
+                   }
+               }
+               else if($time == 01){
+                    $arr = array();
+
+              for($i = 0 ;$i < 1 ; $i++){   
+        
+                           
+               if($i == 0){
+                        $start = date('Y-m-d  H:i:s'); 
+                        $end = strtotime('-1 Hour',strtotime($start));
+                        $temp =  date( "Y-m-d  H:i:s" , $end);
+                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+                   }
+        
+               else {
+                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
+                       }
+                   }
+               }
+           }
+       }
+
+
+ for($i = 0 ; $i < count($like_query) ; $i++){
+                 // $ind = 0;
+                   error_reporting(0);// phe;a result lakr aja sub 
+
+                 $find [$i] = wafEvent::where([['zone_id',$zone->id ],[ 'updated_at', 'LIKE',  $like_query[$i] . '%'],])->get()->take(50000);
+   
+                 
+                   for($j = 0 ; $j < count($find[$i]) ; $j++){
+                   
+                     if($find[$i][$j]['action'] == "drop"){
+                            $drop[$i]++;
+                      } 
+                       if($find[$i][$j]['action'] == "allow"){
+                            $allow[$i]++;
+                      } 
+                      if($find[$i][$j]['action'] == "block"){
+                            $log[$i]++;
+                      } 
+                      if($find[$i][$j]['action'] == "challenge"){
+                            $challenge[$i]++;
+                      } 
+                  }
+               
+               if($drop[$i]=="" || $drop[$i] ==0)
+               {
+                   $drop[$i] = 0 ; 
+               }
+
+               if($challenge[$i]=="" || $challenge[$i] ==0)
+               {
+                   $challenge[$i] = 0 ;
+               }
+
+               if($allow[$i]=="" || $allow[$i] ==0)
+               {
+                   $allow[$i] = 0 ;
+               }
+
+               if($log[$i]=="" || $log[$i] ==0)
+               {
+                   $log[$i] = 0 ; 
+               }
+           }
+         
+      
+
+
+         $period = array_unique($period);
+
+       
+//dd($domain);
 
 /*
 foreach($duplicates as $duplicate){
@@ -226,7 +502,7 @@ die();
             $rules=$zone->FirewallRule;
 
             $uaRules=$zone->UaRule;
-            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths'));    
+            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop"));    
         }
         else
         {
@@ -234,7 +510,7 @@ die();
             // dd($rules);
             
             // dd($events);
-            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events'));
+            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop"));
         }
         
         

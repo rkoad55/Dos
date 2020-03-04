@@ -58,17 +58,104 @@ class FetchWAFEvents implements ShouldQueue
 $i=0;
 
 $events=(array)$events;
-//dd($events);
+// dd($events);
 //ini_set('max_execution_time', '0');
+$temp = array();
+        // for($i = 0 ; $i < count($events) ; $i++){
+        //       $temp[$i] = $events["result"][0];
+        //     //   print_r($temp);
+        //     dd($temp);
+        //     //   die();
+        // }
+
+//         foreach ($events["result"] as $key => $val){
+//             $count = count($val->matches);
+//            // dd($val->matches);
+// $a=0;
+//             foreach($val->matches as $v){
+
+//                 // if($a==15){
+//                 //     $temp =  count($v[0]->metadata);
+//                 //     if ( $temp > 0)
+//                 // print_r($v[0]->metadata);
+//                 // // die();
+//                 // }
+//                 // $a++;
+
+                
+//                 if(property_exists($v,'metadata')){
+//     // echo    $v->metadata;
+//      print_r($evente['scope']=$v->metadata->group);
+//         // $evente['scope']=$event->matches[0]->metadata->group;
+//         // $evente['rule_name']=$event->matches[0]->metadata->rule_message;
+
+// // }
+
+// //echo "Found";
+//             // dd($val->matches[0]->metadata);
+//         }else {
+
+//             echo "Not Found";
+
+//         }
+//     }
+// }
+//         // dd($temp);
+       
+//         die();
+
         foreach ($events['result'] as $event) {
             # code...
            
 
-        // dd($event->ray_id);
+      //dd($event);
+    //   echo   $evente['headers']=$event->matches[0]->metadata->matched_var;
+    //   echo  $evente['scope']=$event->matches[0]->metadata->group;
+    //   echo  $evente['rule_name']=$event->matches[0]->metadata->rule_message;
+       // dd($event->matches[0]);
 
          // print_r($event['0']->ray_id);
           // die();
+
+
+
+
+        //   foreach($event->matches as $v){
+
           
+
+            
+            if(property_exists($event->matches[0],'metadata')){
+// echo    $v->metadata;
+if(property_exists($event->matches[0]->metadata,'group')){
+ $evente['scope']=$event->matches[0]->metadata->group;
+
+            }
+
+            if(property_exists($event->matches[0]->metadata,'matched_var')){
+ $evente['headers']=$event->matches[0]->metadata->matched_var;
+
+            }
+
+            if(property_exists($event->matches[0]->metadata,'rule_message')){
+            $evente['rule_name']=$event->matches[0]->metadata->rule_message;
+           
+                       }
+//  $evente['headers']=$event->matches[0]->metadata->matched_var;
+//          $evente['scope']=$event->matches[0]->metadata->group;
+         // $evente['rule_name']=$event->matches[0]->metadata->rule_message;
+
+// }
+
+//echo "Found";
+        // dd($val->matches[0]->metadata);
+    }
+
+   
+    
+ // }
+
+       // die();  
             $check['resource_id']=$event->ray_id;
             $check['zone_id']=$this->zone->id;
 
@@ -96,9 +183,15 @@ $events=(array)$events;
         $evente['scheme']=$event->scheme;
 
         $evente['request_type']=$event->source;
-        $evente['rule_name']=$event->kind;
+        //$evente['rule_name']=$event->kind;
+       
 
-        
+// if(property_exists($event->matches[0],'metadata')){
+//         $evente['headers']=$event->matches[0]->metadata->matched_var;
+//         $evente['scope']=$event->matches[0]->metadata->group;
+//         $evente['rule_name']=$event->matches[0]->metadata->rule_message;
+
+// }
             $evente['scheme']=$event->proto;
             $evente['domain']=$event->host;
            // $event['rule_name']=$event['rule_message'];
@@ -121,7 +214,7 @@ $events=(array)$events;
 
             
            
-            $insertedEvent=wafEvent::updateOrCreate($check,$evente);
+           $insertedEvent=wafEvent::updateOrCreate($check,$evente);
             // dd($insertedEvent);
         // $i++;
 
@@ -129,7 +222,7 @@ $events=(array)$events;
 
 
 
-       
+      //die();
         
     }
 
