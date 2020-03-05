@@ -212,33 +212,287 @@ class FirewallController extends Controller
          $method=json_decode($method,true);
 
 
+         $request_type = DB::table('waf_events')
+         ->select('request_type', DB::raw('COUNT(request_type) as `request_types` '))
+         ->where('zone_id',$used_id )
+         ->groupBy('request_type')
+         ->havingRaw('COUNT(request_type) > 1')
+         ->orderBy('request_types', 'DESC')
+         ->take(10)
+         ->get();
+
+
+         $request_type=json_decode($request_type,true);
+
+//dd($request_type);
 
 
 
-         $eve = json_decode($events ,true);
-         $period = array();
+$eve = json_decode($events ,true);
+$period = array();
+date_default_timezone_set("Asia/Karachi");
 
 
-           // $request_cached_uncached[$key]['period'] = dateFormatting(date("Y-m-d H:i:s", strtotime($value->since)),hour);
-         // dd($eve);
-         $challenge = array();
-         $block = array();
-         $allow = array();
-         $log = array();
+$challenge = array();
+$block = array();
+$allow = array();
+$log = array();
 
-         for($i = 0 ; $i < count($eve) ; $i++){
-               $a =  substr($eve[$i]['timestamp'], -7,-5);
-               $period[$i] =  $a;
-           }
-       
-   $unique =  array_unique($period);
-   $key = array_keys($unique);
-   // print_r($unique[1]); 
- // dd(count($period));
-   end($unique);
-   $index = key($unique);
 
-   $key1 = count($key);
+
+
+$like_query = array();
+$hours_graph=0;
+$days_graph=0;
+
+          $hours_graph = 26;
+          $days_graph = 30;
+              $final = array();
+
+              $arr = array();
+              for($k = 0 ; $k < 30 ; $k++){ 
+                  $start = date( "Y-m-d  H:i:s" );
+                  $end = strtotime('-'.$k.' day',strtotime($start));
+   
+                           $temp =  date( "Y-m-d  H:i:s" , $end);
+
+                           $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+
+                           $final[$k] =  date( "Y-m-d" , strtotime($temp));
+                 
+                          $like_query[$k] = $final[$k];
+                      }
+
+if($req->time !="" || $req->time > 0){
+  $time =  $req->time; 
+  if($time == "month" ){
+       $like_query = array();
+          $hours_graph = 26;
+          $days_graph = 30;
+              $final = array();
+
+              $arr = array();
+              for($k = 0 ; $k < 30 ; $k++){ 
+                  $start = date( "Y-m-d  H:i:s" );
+                  $end = strtotime('-'.$k.' day',strtotime($start));
+   
+                           $temp =  date( "Y-m-d  H:i:s" , $end);
+
+                           $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+
+                           $final[$k] =  date( "Y-m-d" , strtotime($temp));
+                 
+                          $like_query[] = $final[$k];
+                      }
+      // onLoad();
+                }                   
+          
+        else if($time == "week" ){
+         //  $like_query = array();
+              $days_graph = 7;
+              $hours_graph = 25;
+              $final = array();
+              $like_query = array();
+              $arr = array();
+
+              for($k = 0 ; $k < 7 ; $k++){ 
+                  $start = date( "Y-m-d  H:i:s" );
+                  $end = strtotime('-'.$k.' day',strtotime($start));
+   
+                           $temp =  date( "Y-m-d  H:i:s" , $end);
+
+                           $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+
+                           $final[$k] =  date( "Y-m-d" , strtotime($temp));
+                 
+                      $like_query[$k] = $final[$k];
+          }
+  }
+
+
+
+
+  else if($time > 0){
+       $like_query = array();
+      if($time == 24){
+          $hours_graph = 24;
+          $arr = array();
+
+     for($i = 0 ;$i < 24 ; $i++){   
+
+                  
+      if($i == 0){
+               $start = date('Y-m-d  H:i:s'); 
+               $end = strtotime('-1 Hour',strtotime($start));
+               $temp =  date( "Y-m-d  H:i:s" , $end);
+               $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+               $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+          }
+
+   else {
+              $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+              $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+              $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+              $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+              $like_query[$i] = date("Y-m-d H",strtotime($temp));
+         }
+      }
+  }
+
+
+
+      else if($time == 12){
+              $arr = array();
+              $hours_graph = 12;
+     for($i = 0 ;$i < 12 ; $i++){   
+
+                  
+      if($i == 0){
+               $start = date('Y-m-d  H:i:s'); 
+               $end = strtotime('-1 Hour',strtotime($start));
+               $temp =  date( "Y-m-d  H:i:s" , $end);
+               $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+               $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+          }
+
+      else {
+                  $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                  $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                   $like_query[$i] = date("Y-m-d H",strtotime($temp));
+              }
+          }
+      }
+     
+
+
+      else if($time == 6){
+           $arr = array();
+          $hours_graph = 6;
+     for($i = 0 ;$i < 6 ; $i++){   
+
+                  
+      if($i == 0){
+               $start = date('Y-m-d  H:i:s'); 
+               $end = strtotime('-1 Hour',strtotime($start));
+               $temp =  date( "Y-m-d  H:i:s" , $end);
+               $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+               $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+          }
+
+      else {
+                  $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                  $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                   $like_query[$i] = date("Y-m-d H",strtotime($temp));
+              }
+          }
+      }
+
+
+
+      else if($time == 01){
+           $arr = array();
+           $hours_graph = 1;
+     for($i = 0 ;$i < 1 ; $i++){   
+
+                  
+      if($i == 0){
+               $start = date('Y-m-d  H:i:s'); 
+               $end = strtotime('-1 Hour',strtotime($start));
+               $temp =  date( "Y-m-d  H:i:s" , $end);
+               $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+               $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
+          }
+
+      else {
+                  $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
+                  $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                  $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
+                   $like_query[$i] = date("Y-m-d H",strtotime($temp));
+              }
+          }
+      }
+  } //time in hours if
+
+
+} // end if
+
+// dd($hours_graph);
+// onLoad();
+// dd($days_graph);
+if($hours_graph > 0 && $hours_graph <= 24){ 
+   for($i = 0 ; $i < $hours_graph ; $i++){
+     $start = date('Y-m-d  H:i:s'); 
+     // echo $start ; die();
+     if($i == 0){
+          $temp =  date( "H" , strtotime($start));
+      }
+      else{
+          $start = date('Y-m-d H:i:s' , strtotime('-'.$i.'Hour',strtotime($start)));
+          $end = strtotime('-1 Hour',strtotime($start));
+          $temp =  date( "H" , strtotime($start));
+      }
+          $period[$i] = $temp.":00";
+
+  } //dd($period);
+}
+else if($days_graph  == 7){
+  // dd($$hours_graph);
+for($i = 0 ; $i <= $days_graph ; $i++){
+     $start = date('Y-m-d  H:i:s'); 
+     // echo $start ; die();
+     if($i == 0){
+          $temp =  date( "D" , strtotime($start));
+          
+      }
+      else{
+          $start = date('Y-m-d H:i:s' , strtotime('-'.$i.'days',strtotime($start)));
+          $end = strtotime('-'.$i.' days',strtotime($start));
+          $temp =  date( "D" , strtotime($start));
+      }
+          $period[$i] = $temp;
+
+  }
+          // $period[$i] = $temp;
+  }
+
+  else if($days_graph ==30){
+  // dd($$hours_graph);
+for($i = 0 ; $i <= $days_graph ; $i++){
+     $start = date('Y-m-d  H:i:s'); 
+     // echo $start ; die();
+     if($i == 0){
+          $temp =  date( "Y-m-d" , strtotime($start));
+          
+      }
+      else{
+          $start = date('Y-m-d H:i:s' , strtotime('-'.$i.'days',strtotime($start)));
+          $end = strtotime('-'.$i.' days',strtotime($start));
+          $temp =  date( "Y-m-d" , strtotime($start));
+      }
+          $period[$i] = $temp;
+
+  }
+          // $period[$i] = $temp;
+  // die();
+  }
+
+  // dd($period);
+
+$period = array_reverse($period);
+// dd($period);
+// $unique =  array_unique($period);
+// $key = array_keys($unique);
+// print_r($unique[1]); 
+// // dd(count($period));
+//   end($unique);
+//   $index = key($unique);
+
+$key1 = count($period);
 
 // dd($key);   
 $find =array();
@@ -251,247 +505,63 @@ $log =array();
 // dd($zone->id);
 
 $counter = 0 ;
-           // echo  count($drop);
 
+for($i = 0 ; $i < count($like_query) ; $i++){
+        // $ind = 0;
+          error_reporting(0);// phe;a result lakr aja sub 
 
+        $find [$i] = wafEvent::where([['zone_id',$zone->id ],[ 'updated_at', 'LIKE',  $like_query[$i] . '%'],])->get()->take(50000);
 
-$like_query = array();
-
-       if($req->time !="" || $req->time > 0){
-           $time =  $req->time; 
-           if($time == "month" ){
-               $arr = array();
-
-              for($i = 0 ;$i < 24 ; $i++){   
         
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-30 Day',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-            else {
-                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-30 Day',strtotime($converted)));
-                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                  }
-               }
-           }
-           else if($time == "week" ){
-                     $arr = array();
-            for($k = 1 ; $k <= 7 ; $k++ ){         
-              for($i = 0 ;$i < 24 ; $i++){   
-        
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-$k Day',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-            else {
-                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-$k Day',strtotime($converted)));
-                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                       }
-                   }
-               }
-           }
-           else if($time > 0){
-               
-               if($time == 24){
-           
-                   $arr = array();
-
-              for($i = 0 ;$i < 24 ; $i++){   
-        
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-1 Hour',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-            else {
-                       $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                       $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                       $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                       $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                  }
-               }
-
-           }     
-               else if($time == 12){
-                       $arr = array();
-
-              for($i = 0 ;$i < 12 ; $i++){   
-        
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-1 Hour',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-               else {
-                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                       }
-                   }
-               }
-               else if($time == 6){
-                    $arr = array();
-
-              for($i = 0 ;$i < 6 ; $i++){   
-        
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-1 Hour',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-               else {
-                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                       }
-                   }
-               }
-               else if($time == 01){
-                    $arr = array();
-
-              for($i = 0 ;$i < 1 ; $i++){   
-        
-                           
-               if($i == 0){
-                        $start = date('Y-m-d  H:i:s'); 
-                        $end = strtotime('-1 Hour',strtotime($start));
-                        $temp =  date( "Y-m-d  H:i:s" , $end);
-                        $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
-                        $like_query[] =  date( "Y-m-d  H" , strtotime($temp)); 
-                   }
-        
-               else {
-                           $arr[$i] = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $converted = date("Y-m-d  H:i:s" , strtotime($arr[$i-1]));
-                           $arr[$i] = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                           $temp = date( "Y-m-d  H:i:s" ,strtotime('-1 Hour',strtotime($converted)));
-                            $like_query[$i] = date("Y-m-d H",strtotime($temp));
-                       }
-                   }
-               }
-           }
-       }
-
-
- for($i = 0 ; $i < count($like_query) ; $i++){
-                 // $ind = 0;
-                   error_reporting(0);// phe;a result lakr aja sub 
-
-                 $find [$i] = wafEvent::where([['zone_id',$zone->id ],[ 'updated_at', 'LIKE',  $like_query[$i] . '%'],])->get()->take(50000);
-   
-                 
-                   for($j = 0 ; $j < count($find[$i]) ; $j++){
-                   
-                     if($find[$i][$j]['action'] == "drop"){
-                            $drop[$i]++;
-                      } 
-                       if($find[$i][$j]['action'] == "allow"){
-                            $allow[$i]++;
-                      } 
-                      if($find[$i][$j]['action'] == "block"){
-                            $log[$i]++;
-                      } 
-                      if($find[$i][$j]['action'] == "challenge"){
-                            $challenge[$i]++;
-                      } 
-                  }
-               
-               if($drop[$i]=="" || $drop[$i] ==0)
-               {
-                   $drop[$i] = 0 ; 
-               }
-
-               if($challenge[$i]=="" || $challenge[$i] ==0)
-               {
-                   $challenge[$i] = 0 ;
-               }
-
-               if($allow[$i]=="" || $allow[$i] ==0)
-               {
-                   $allow[$i] = 0 ;
-               }
-
-               if($log[$i]=="" || $log[$i] ==0)
-               {
-                   $log[$i] = 0 ; 
-               }
-           }
-         
+          for($j = 0 ; $j < count($find[$i]) ; $j++){
+          
+            if($find[$i][$j]['action'] == "drop"){
+                   $drop[$i]++;
+             } 
+              if($find[$i][$j]['action'] == "allow"){
+                   $allow[$i]++;
+             } 
+             if($find[$i][$j]['action'] == "block"){
+                   $log[$i]++;
+             } 
+             if($find[$i][$j]['action'] == "challenge"){
+                   $challenge[$i]++;
+             } 
+         }
       
+      if($drop[$i]=="" || $drop[$i] ==0)
+      {
+          $drop[$i] = 0 ; 
+      }
+
+      if($challenge[$i]=="" || $challenge[$i] ==0)
+      {
+          $challenge[$i] = 0 ;
+      }
+
+      if($allow[$i]=="" || $allow[$i] ==0)
+      {
+          $allow[$i] = 0 ;
+      }
+
+      if($log[$i]=="" || $log[$i] ==0)
+      {
+          $log[$i] = 0 ; 
+      }
+  }
+
+   $challenge = array_reverse($challenge);
+    $log = array_reverse($log);
+     $allow = array_reverse($allow);
+      $drop = array_reverse($drop);
 
 
-         $period = array_unique($period);
+
+$period = array_unique($period);
+
 
        
-//dd($domain);
-
-/*
-foreach($duplicates as $duplicate){
-
-echo  $duplicate['client_ip'];
-
-
-}
-
-die();
-  */          //dd($product);
-        
-/*
-            array_multisort(array_column($product->items, 'count'), SORT_DESC, $product);
-
-            echo '<pre>';
-            print_r($product);
-
-           //$duplicates=array($duplicates);
-         echo  array_multisort(array_column($duplicates, 'count'), SORT_DESC, $duplicates);
-         $dupes = $groupedByValue->filter(function (Collection $duplicates) {
-           return $duplicates->count() > 1;
-                 });
-
-
-*/
-    
-
-           //dd($product);
-            
-        //die();
-
-    // $ok=$zone->wafEvent->sortBy('timestamp')->take(500);
-        // echo "$ok";
-        // die();        
+      
         
         if($zone->cfaccount_id!=0)
         {   
@@ -502,7 +572,7 @@ die();
             $rules=$zone->FirewallRule;
 
             $uaRules=$zone->UaRule;
-            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop"));    
+            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type'));    
         }
         else
         {
@@ -510,7 +580,7 @@ die();
             // dd($rules);
             
             // dd($events);
-            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop"));
+            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type'));
         }
         
         

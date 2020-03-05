@@ -3,10 +3,48 @@
 
 @section('content')
 
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-<script src="https://code.highcharts.com/modules/export-data.js"></script>
-<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<style>
+      
+      #chart {
+    max-width: 650px;
+    margin: 35px auto;
+  }
+    
+  </style>
+
+  <script>
+    window.Promise ||
+      document.write(
+        '<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"><\/script>'
+      )
+    window.Promise ||
+      document.write(
+        '<script src="https://cdn.jsdelivr.net/npm/eligrey-classlist-js-polyfill@1.2.20171210/classList.min.js"><\/script>'
+      )
+    window.Promise ||
+      document.write(
+        '<script src="https://cdn.jsdelivr.net/npm/findindex_polyfill_mdn"><\/script>'
+      )
+  </script>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/react@16.12/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@16.12/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prop-types@15.7.2/prop-types.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-apexcharts@1.3.6/dist/react-apexcharts.iife.min.js"></script>
+  
+
+  <script>
+    // Replace Math.random() with a pseudo-random number generator to get reproducible results in e2e tests
+    // Based on https://gist.github.com/blixt/f17b47c62508be59987b
+    var _seed = 42
+    Math.random = function() {
+      _seed = (_seed * 16807) % 2147483647
+      return (_seed - 1) / 2147483646
+    }
+  </script>
 
 {{-- Firewall Code Starts --}}
 <div class="panel with-nav-tabs panel-default">
@@ -36,7 +74,7 @@
 <form method="get" action="#">
 
 <select class="select2 form-control " id="minutes" name="time" >
-                        
+<option value="01" >Select Time-Period</option>       
      <option value="01" >Last 01 Hour</option>
   
      <option  value="06">Last 6 Hours</option>
@@ -70,10 +108,11 @@
   
 
 
-        <div id="container"></div>
+        <div id="app"></div>
 
 
-					
+					</br>
+          
          
                    
 				</div>
@@ -91,7 +130,10 @@
 				
 				<div class="panel-body">
 					<center>
-                        <h1>Graph Here</h1>
+         
+  
+    <div id="piechart_3d" style="width: 700px; height: 400px;"></div>
+  
                     </center>
 				</div>
 
@@ -116,7 +158,7 @@
     
 </div>
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row['count']; if($count>=100) { echo "100"; }else{ echo $row['count']; } ?>%"  aria-valuemin="0" ><?php echo $row['count']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row['count']; if($count>=100) { echo "100"; }else{ echo $row['count']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row['count'];?>" aria-valuemax="1000" ><?php echo $row['count']; ?></div>
 </div>
   
   
@@ -142,7 +184,7 @@
 </div>
 
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row1['counts']; if($count>=100) { echo "100"; }else{ echo $row1['counts']; }  ?>%"  aria-valuemin="0" ><?php echo $row1['counts']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row1['counts']; if($count>=100) { echo "100"; }else{ echo $row1['counts']; }  ?>%"  aria-valuemin="0"aria-valuenow="<?php echo $row1['counts'];?>" aria-valuemax="1000" ><?php echo $row1['counts']; ?></div>
 </div>
    
     
@@ -171,7 +213,7 @@
 </div>
 
 <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row2['countes']; if($count>=100) { echo "100"; }else{ echo $row2['countes']; } ?>%"  aria-valuemin="0" ><?php echo $row2['countes']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row2['countes']; if($count>=100) { echo "100"; }else{ echo $row2['countes']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row2['countes'];?>" aria-valuemax="1000" ><?php echo $row2['countes']; ?></div>
 </div>
 
 
@@ -202,7 +244,7 @@ echo $names[$row3['country']];
 </div>
 
 <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['countees']; if($count>=100) { echo "100"; }else{ echo $row3['countees']; } ?>%"  aria-valuemin="0" ><?php echo $row3['countees']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['countees']; if($count>=100) { echo "100"; }else{ echo $row3['countees']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['countees'];?>" aria-valuemax="1000" ><?php echo $row3['countees']; ?></div>
 </div>
 
 
@@ -229,7 +271,7 @@ echo $names[$row3['country']];
 </div>
     
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['domains']; if($count>=100) { echo "100"; }else{ echo $row3['domains'];}  ?>%"  aria-valuemin="0" ><?php echo $row3['domains']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['domains']; if($count>=100) { echo "100"; }else{ echo $row3['domains'];}  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['domains'];?>" aria-valuemax="1000" ><?php echo $row3['domains']; ?></div>
 </div>
 
 
@@ -253,7 +295,7 @@ echo $names[$row3['country']];
 </div>
     
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['methods']; if($count>=100) { echo "100"; }else{ echo $row3['methods'];}  ?>%"  aria-valuemin="0" ><?php echo $row3['methods']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['methods']; if($count>=100) { echo "100"; }else{ echo $row3['methods'];}  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['methods'];?>" aria-valuemax="1000" ><?php echo $row3['methods']; ?></div>
 </div>
 
 
@@ -349,90 +391,119 @@ echo $names[$row3['country']];
 
             {{-- Activity Log starts --}}
 @if(count($events))
-    <div class="panel panel-default panel-main">
-      <div class="panel-heading"><h2 style="display: inline">Activity Logs </h2>
-    
-  </div>
+<div class="panel panel-default panel-main">
+<div class="panel-heading"><h2 style="display: inline">Activity Logs </h2>
+
+</div>
 
 
-      <input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
+<input type="hidden" name="csrftoken" value="{{csrf_token()}}" >
 
-        <div class="panel-body table-responsive">
-      
+<div class="panel-body table-responsive">
 
-            <table class="table table-striped table-condensed firewallEvents">
 
-                <thead>
-                    <tr>
-                        <th>Description</th>
+<table class="table table-striped table-condensed firewallEvents">
 
-                        <th>Action</th>
-                        
-                        <th>IP</th>
-                        <th>Country</th>
-                        <th>Date</th>
-                         <th>&nbsp;</th>
-                        <th>&nbsp;</th>
+<thead>
+<tr>
+<th>Description</th>
 
-                    </tr>
-                </thead>
+<th>Action</th>
 
-                <tbody>
-                    @if (count($events) > 0)
-                        @foreach ($events as $event)
-                            <tr id="record_{{ $event->id }}" data-entry-id="{{ $event->id }}">
-                                <td>{{ $event->rule_name }}</td>
+<th>IP</th>
+<th>Country</th>
+<th>Date</th>
+<th>&nbsp;</th>
+<th>&nbsp;</th>
 
-                                <td>
-                                  {{ $event->action }}
-                                </td>
+</tr>
+</thead>
 
-                               
+<tbody>
+<?php $data = '';?>
+@if (count($events) > 0)
+@foreach ($events as $event)
+<tr id="record_{{ $event->id }}" data-entry-id="{{ $event->id }}">
+<td>{{ $event->rule_name }}</td>
 
-                                <td>
-                                  {{ $event->client_ip }}
-                                </td>
-                                <td>
-                                  {{ $event->country }}
-                                </td>
-                                
-                                <td>
-                                  {{ $event->timestamp }}
-                                </td>
-                                <td>
-                                  {{ $event->ts }}
-                                </td>
-                                <td>
-                                    
-                                    <button data-rulename="{{ $event->rule_name }}" 
-                                       data-date="{{ $event->timestamp }}"
-                                       data-resource_id="{{ $event->resource_id }}" 
-                                        data-action="{{ $event->action }}" 
-                                         data-schememethod="{{ $event->scheme }} {{ $event->method }}" 
-                                          data-uri="{{ $event->uri }}" 
-                                           data-querystring="{{ $event->query_string }}" 
-                                            data-domain="{{ $event->domain }}" 
-                                             data-clientip="{{ $event->client_ip }}" 
-                                              data-country="{{ $event->country }}" 
-                                              data-scope="{{ $event->scope }}" 
-                                               data-useragent="@if($event->user_agent!='') {{ $event->user_agent }} @endif" 
-                                         
-                                              class="btn btn-info eventDetail">Details</button>
+<td>
+{{ $event->action }}
+</td>
 
-                                </td>
 
-                            </tr>
-                        @endforeach
-                    @else
-                        <tr>
-                            <td colspan="9">@lang('global.app_no_entries_in_table')</td>
-                        </tr>
-                    @endif
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {{-- activity Logs Ends --}}
+
+<td>
+{{ $event->client_ip }}
+</td>
+<td>
+{{ $event->country }}
+</td>
+
+<td>
+{{ $event->timestamp }}
+</td>
+<td>
+{{ $event->ts }}
+</td>
+<td>
+
+<div>
+<?php
+
+$data = "
+<b>Ray ID:</b> &nbsp; $event->resource_id <br><br>
+<b>Method:</b> &nbsp; $event->method <br><br>
+<b>Query String </b> &nbsp; $event->query_string <br><br>
+<b>User Agent:</b> &nbsp; $event->user_agent <br><br>
+<b>IP Address:</b> &nbsp; $event->client_ip <br> <br>
+<b>Country:</b> &nbsp; $event->country <br><br>
+<b>Service:</b> &nbsp; $event->request_type <br><br>
+<b>Rule ID:</b> &nbsp; $event->rule_id <br><br>
+<b>Description:</b> &nbsp; $event->rule_name <br><br>
+<b>Action Taken:</b> &nbsp; $event->action <br><br>
+";?>
+</div>
+<button data-toggle="modal" data-target="#myModal{{ $event->id }}" class="btn btn-success">Details</button>
+
+</td>
+
+</tr>
+
+<div class="modal fade" id="myModal{{ $event->id }}" role="dialog">
+<div class="modal-dialog">
+
+<!-- Modal content-->
+<div class="modal-content">
+<div class="modal-header">
+<button type="button" class="close" data-dismiss="modal">&times;</button>
+<h4 class="modal-title">Activity Log Details</h4>
+</div>
+<div class="modal-body">
+<div>
+<?php echo $data; ?>
+</div>
+</div>
+<div class="modal-footer">
+<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+</div>
+</div>
+
+</div>
+</div>
+
+@endforeach
+
+
+@else
+<tr>
+<td colspan="9">@lang('global.app_no_entries_in_table')</td>
+</tr>
+@endif
+</tbody>
+</table>
+</div>
+</div>
+{{-- activity Logs Ends --}}
     
 </div>
 {{-- 1st pane end --}}
@@ -553,7 +624,8 @@ echo $names[$row3['country']];
                 <td>{{ str_replace("Cloudflare","BlockDOS",$wafGroup->description) }}</td>
                 
 				<td> 
-                <input group-id="{{ $wafGroup->id }}" class="wafGroupToggle" type="checkbox" data-onstyle="primary" data-offstyle="danger" {{ $wafGroup->mode === "on" ? "checked" : "" }} data-toggle="toggle" data-on=" ON" data-off="OFF">
+        <input group-id="{{ $wafGroup->id }}" class="toggle" type="checkbox" {{ $wafGroup->mode === "on" ? "checked" : "" }}  />
+                <!-- <input group-id="{{ $wafGroup->id }}" class="wafGroupToggle" type="checkbox" data-onstyle="primary" data-offstyle="danger" {{ $wafGroup->mode === "on" ? "checked" : "" }} data-toggle="toggle" data-on=" ON" data-off="OFF"> -->
                 
                 </td>
                 </tr>
@@ -1364,55 +1436,134 @@ echo $names[$row3['country']];
 </div>
 
 
-<script type="text/javascript">
+<script type="text/babel">
+      class ApexChart extends React.Component {
+        constructor(props) {
+          super(props);
 
-Highcharts.chart('container', { 
- chart: {
-     type: 'line'
- },
- title: {
-     text: 'Events By Action' 
- },
- subtitle: {
-     text: 'Source: WorldClimate.com'
- }, 
- xAxis: {
-     categories: [ <?php foreach ($period as $key )  echo $key.',';   ?> ]
- },
- yAxis: {
-     title: {
-         text: 'Number Of Events'
-     }
- },
- plotOptions: {
-     line: {
-         dataLabels: {
-             enabled: true
-         },
-         enableMouseTracking: false
-     }
- },
- series: [ 
- {
-     name: 'Challenge',
-     data: [<?php foreach ($challenge as $key )  {  echo $key.',' ;  } ?>]
- }, {
-     name: 'Log/Simulate',
-     data: [<?php foreach ($log as $key )  {  echo $key.',' ;  } ?>]
- },
- {
-     name: 'Allow',
-     data: [<?php foreach ($allow as $key )  {  echo $key.',' ;  } ?>]
- }, {
-     name: 'Drop',
-     data: [<?php foreach ($drop as $key )  {  echo $key.',' ;  } ?>]
- }
+          this.state = {
+          
+           series: [ 
+    {
+        name: 'Challenge',
+        data: [<?php foreach ($challenge as $key )  {  echo $key.',' ;  } ?>]
+    }, {
+        name: 'Log/Simulate',
+        data: [<?php foreach ($log as $key )  {  echo $key.',' ;  } ?>]
+    },
+    {
+        name: 'Allow',
+        data: [<?php foreach ($allow as $key )  {  echo $key.',' ;  } ?>]
+    }, {
+        name: 'Drop',
+        data: [<?php foreach ($drop as $key )  {  echo $key.',' ;  } ?>]
+    }
 
- ]
-})
+    ],
+            options: {
+              chart: {
+                height: 600,
+                type: 'line',
+              },
+              stroke: {
+                width: 9,
+                curve: 'smooth'
+              },
+              xaxis: {
+                type: 'time',
+                categories: [<?php foreach ($period as $key )  echo '"'."$key".'"'.',';   ?>],
+              },
+              title: {
+                text: 'Firewall Events Log',
+                align: 'left',
+                style: {
+                  fontSize: "16px",
+                  color: '#666'
+                }
+              },
+              fill: {
+                type: 'gradient',
+                gradient: {
+                  shade: 'dark',
+                  gradientToColors: [ '#FDD835'],
+                  shadeIntensity: 1,
+                  type: 'horizontal',
+                  opacityFrom: 1,
+                  opacityTo: 1,
+                  stops: [0, 100, 100, 100]
+                },
+              },
+              markers: {
+                size: 4,
+                colors: ["#FFA41B"],
+                strokeColors: "#fff",
+                strokeWidth: 2,
+                hover: {
+                  size: 7,
+                }
+              },
+              yaxis: {
+                min: 0,
+                max: 200,
+                title: {
+                  text: 'Events Log',
+                },
+              }
+            },
+          
+          
+          };
+        }
 
+      
 
-</script>
+        render() {
+          return (
+            <div>
+              <div id="chart">
+                <ReactApexChart options={this.state.options} series={this.state.series} type="line" height={350} />
+              </div>
+              <div id="html-dist"></div>
+            </div>
+          );
+        }
+      }
+
+      const domContainer = document.querySelector('#app');
+      ReactDOM.render(React.createElement(ApexChart), domContainer);
+    </script>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("current", {packages:["corechart"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Task', 'Hours per Day'],
+          
+          <?php
+          $i= count($request_type);
+          
+          foreach($request_type as $ro){ 
+
+            ?>
+          ['<?php echo $ro['request_type']." "." : ".$ro['request_types'];?>',<?php echo $ro['request_types'];?>],
+          
+          <?php
+          }
+
+          ?>
+        ]);
+
+        var options = {
+          title: '',
+          is3D: true,
+        };
+
+        var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
+        chart.draw(data, options);
+      }
+    </script>
 
  
 @stop
