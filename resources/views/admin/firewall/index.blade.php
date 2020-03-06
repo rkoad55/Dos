@@ -83,6 +83,8 @@
      <option  value="24">Last 24 Hours</option>
      <option  value="week">Last 7 Days</option>
      <option  value="month">Last Month</option>
+     <option  value="month_3">Last 3 Month</option>
+    <option  value="month_6">Last 6 Month</option> 
 
 </select>
 
@@ -103,17 +105,21 @@
 				</div>
 				
 				<div class="panel-body">
-
-        
+        <center>
+        <div style="color: rgb(0, 143, 251)"> <b class="col-sm-3" id="challenge"></b></div>
+                    <div style="color: rgb(0, 227, 150);"> <b class="col-sm-3" id="drop"></b> </div>
+                    <div style="color: rgb(254, 176, 25);"> <b class="col-sm-3" id="allow"></b> </div>
+                    <div style="color: rgb(255, 69, 96);"> <b class="col-sm-3" id="log"></b> </div>
+        <br/><br/>
   
-
+       
 
         <div id="app"></div>
 
 
-					</br>
-          
-         
+				
+        </center>
+       
                    
 				</div>
 
@@ -154,11 +160,14 @@
    <?php $i=0; ?>
     @foreach($duplicates as $row)
     <div class=" col col-lg-12" >
-       <h6><b>{{ $row['client_ip'] }}</b></h6>  
+       <h6><b>{{ $row['client_ip'] }} <?php $percentage =$row['count'] ;
+$totalWidth = $duplicates_total;
+
+ $new_width = ($percentage * 100) / $totalWidth; ?></b></h6>  
     
 </div>
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row['count']; if($count>=100) { echo "100"; }else{ echo $row['count']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row['count'];?>" aria-valuemax="1000" ><?php echo $row['count']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php echo $new_width;  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row['count'];?>" aria-valuemax="1000" ><?php echo $row['count']; ?></div>
 </div>
   
   
@@ -179,12 +188,15 @@
     <?php $j=505050; ?>
     @foreach($accounts as $row1)
     <div class=" col col-lg-12" > 
-       <h6><b>{{ $row1['user_agent'] }}</b></h6>
+       <h6><b>{{ $row1['user_agent'] }} <?php $percentage =$row1['counts'] ;
+$totalWidth = $accounts_total;
+
+ $new_width = ($percentage * 100) / $totalWidth; ?></b></h6>
     
 </div>
 
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row1['counts']; if($count>=100) { echo "100"; }else{ echo $row1['counts']; }  ?>%"  aria-valuemin="0"aria-valuenow="<?php echo $row1['counts'];?>" aria-valuemax="1000" ><?php echo $row1['counts']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php echo $new_width;  ?>%"  aria-valuemin="0"aria-valuenow="<?php echo $row1['counts'];?>" aria-valuemax="1000" ><?php echo $row1['counts']; ?></div>
 </div>
    
     
@@ -209,11 +221,14 @@
     <?php $j=5050504534; ?>
     @foreach($paths as $row2)
     <div class=" col col-lg-10" >
-       <h6><b>{{ $row2['uri'] }}</b></h6>  
+       <h6><b>{{ $row2['uri'] }} <?php $percentage =$row2['countes'] ;
+$totalWidth = $paths_total;
+
+ $new_width = ($percentage * 100) / $totalWidth; ?></b></h6>  
 </div>
 
 <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row2['countes']; if($count>=100) { echo "100"; }else{ echo $row2['countes']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row2['countes'];?>" aria-valuemax="1000" ><?php echo $row2['countes']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php echo $new_width;  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row2['countes'];?>" aria-valuemax="1000" ><?php echo $row2['countes']; ?></div>
 </div>
 
 
@@ -240,11 +255,14 @@ echo $names[$row3['country']];
     
     
     ?></b></h6> 
+<?php $percentage =$row3['countees'] ;
+$totalWidth = $countries_total;
 
+ $new_width = ($percentage * 100) / $totalWidth; ?>
 </div>
 
 <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['countees']; if($count>=100) { echo "100"; }else{ echo $row3['countees']; } ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['countees'];?>" aria-valuemax="1000" ><?php echo $row3['countees']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width:<?php echo $new_width;  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['countees'];?>" aria-valuemax="1000" ><?php echo $row3['countees']; ?></div>
 </div>
 
 
@@ -267,11 +285,14 @@ echo $names[$row3['country']];
     <?php $j=345050504534; ?>
     @foreach($domain as $row3)
     <div class=" col col-lg-12" >
-       <h6><b>{{ $row3['domain'] }}</b></h6> 
+       <h6><b>{{ $row3['domain'] }}<?php $percentage =$row3['domains'] ;
+$totalWidth = $domain_total;
+
+ $new_width = ($percentage * 100) / $totalWidth; ?></b></h6> 
 </div>
     
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['domains']; if($count>=100) { echo "100"; }else{ echo $row3['domains'];}  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['domains'];?>" aria-valuemax="1000" ><?php echo $row3['domains']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php echo $new_width;  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['domains'];?>" aria-valuemax="1000" ><?php echo $row3['domains']; ?></div>
 </div>
 
 
@@ -291,11 +312,14 @@ echo $names[$row3['country']];
     @foreach($method as $row3)
        
     <div class=" col col-lg-12" >
-       <h6><b>{{ $row3['method'] }}</b></h6> 
+       <h6><b>{{ $row3['method'] }} <?php $percentage =$row3['methods'] ;
+$totalWidth = $method_total;
+
+ $new_width = ($percentage * 100) / $totalWidth; ?></b></h6> 
 </div>
     
     <div class="progress col col-lg-10" >
-  <div class="progress-bar"  role="progressbar" style="width: <?php $count=$row3['methods']; if($count>=100) { echo "100"; }else{ echo $row3['methods'];}  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['methods'];?>" aria-valuemax="1000" ><?php echo $row3['methods']; ?></div>
+  <div class="progress-bar"  role="progressbar" style="width: <?php echo $new_width;  ?>%"  aria-valuemin="0" aria-valuenow="<?php echo $row3['methods'];?>" aria-valuemax="1000" ><?php echo $row3['methods']; ?></div>
 </div>
 
 
@@ -1443,30 +1467,48 @@ $data = "
 
           this.state = {
           
-           series: [ 
+            series: [ 
     {
         name: 'Challenge',
-        data: [<?php foreach ($challenge as $key )  {  echo $key.',' ;  } ?>]
+        data: [<?php $challenges = 0; foreach ($challenge as $key )  {  echo $key.',' ; $challenges+=$key;  } ?>]
     }, {
         name: 'Log/Simulate',
-        data: [<?php foreach ($log as $key )  {  echo $key.',' ;  } ?>]
+        data: [<?php $drops = 0; foreach ($drop as $key )  {  echo $key.',' ;  $drops+=$key; } ?>]
     },
     {
         name: 'Allow',
-        data: [<?php foreach ($allow as $key )  {  echo $key.',' ;  } ?>]
+        data: [<?php $allows = 0; foreach ($allow as $key )  {  echo $key.',' ; $allows+=$key; } ?>]
     }, {
-        name: 'Drop',
-        data: [<?php foreach ($drop as $key )  {  echo $key.',' ;  } ?>]
-    }
+        name: 'Block',
+        
+        data: [<?php $logs =0;  foreach ($log as $key )  {  echo $key.',' ; $logs+=$key;  } ?>]
+    }  
+    <?php 
+    $limit = 0;
+        if($challenges > $allows && $challenges > $logs && $challenges > $drops){
+            $limit = $challenges;
+        }
+        else if($allows > $challenges && $allows > $logs && $allows > $drops ){
+            $limit = $allows;
+        }
+        else if($drops > $challenges && $drops > $logs && $drops > $allows ){
+            $limit = $drops;
+        }
+        else {
+            $limit = $logs;
+        }
+        $limit +=15;
+    ?>
 
     ],
             options: {
               chart: {
-                height: 600,
+                height: 350,
+                
                 type: 'line',
               },
               stroke: {
-                width: 9,
+                width: 7,
                 curve: 'smooth'
               },
               xaxis: {
@@ -1504,9 +1546,9 @@ $data = "
               },
               yaxis: {
                 min: 0,
-                max: 200,
+                max: <?= $limit ?>,
                 title: {
-                  text: 'Events Log',
+                  text: 'Events',
                 },
               }
             },
@@ -1521,7 +1563,7 @@ $data = "
           return (
             <div>
               <div id="chart">
-                <ReactApexChart options={this.state.options} series={this.state.series} type="line" height={350} />
+                <ReactApexChart options={this.state.options} series={this.state.series} type="line" height={450} width={750} />
               </div>
               <div id="html-dist"></div>
             </div>
@@ -1531,6 +1573,19 @@ $data = "
 
       const domContainer = document.querySelector('#app');
       ReactDOM.render(React.createElement(ApexChart), domContainer);
+
+<?php 
+  // $challenge = 0;
+  // foreach ($challenges as $key ) {
+  //     $challenges += $key; 
+  // }
+  // dd($challenge);
+?>
+      $('#challenge').text("Challenge : "+<?=$challenges?>);
+        $('#drop').text("Log/Simulate : "+<?=$drops?>);
+        $('#log').text("Block : "+<?=$logs?>);
+        $('#allow').text("Allow : "+<?=$allows?>);
+
     </script>
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -1563,6 +1618,16 @@ $data = "
         var chart = new google.visualization.PieChart(document.getElementById('piechart_3d'));
         chart.draw(data, options);
       }
+
+
+
+
+
+
+
+
+
+
     </script>
 
  

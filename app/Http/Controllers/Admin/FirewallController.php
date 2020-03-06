@@ -148,6 +148,12 @@ class FirewallController extends Controller
 
 
          $duplicates=json_decode($duplicates,true);
+         $duplicates_total=0;
+         foreach($duplicates as $sum){
+                $duplicates_total += $sum['count'];
+
+         }
+
 
          $accounts = DB::table('waf_events')
          ->select('user_agent', DB::raw('COUNT(client_ip) as `counts` '))
@@ -160,6 +166,12 @@ class FirewallController extends Controller
 
 
          $accounts=json_decode($accounts,true);
+         $accounts_total=0;
+         foreach($accounts as $sum){
+                $accounts_total += $sum['counts'];
+
+         }
+
 
          $paths = DB::table('waf_events')
          ->select('uri', DB::raw('COUNT(uri) as `countes` '))
@@ -172,6 +184,12 @@ class FirewallController extends Controller
 
 
          $paths=json_decode($paths,true);
+         $paths_total=0;
+         foreach($paths as $sum){
+                $paths_total += $sum['countes'];
+
+         }
+
 
          $countries = DB::table('waf_events')
          ->select('country', DB::raw('COUNT(country) as `countees` '))
@@ -184,7 +202,12 @@ class FirewallController extends Controller
 
 
          $countries=json_decode($countries,true);
-         
+         $countries_total=0;
+         foreach($countries as $sum){
+                $countries_total += $sum['countees'];
+
+         }
+
 
          $domain = DB::table('waf_events')
          ->select('domain', DB::raw('COUNT(domain) as `domains` '))
@@ -198,6 +221,12 @@ class FirewallController extends Controller
 
          $domain=json_decode($domain,true);
 
+         $domain_total=0;
+         foreach($domain as $sum){
+                $domain_total += $sum['domains'];
+
+         }
+
 
          $method = DB::table('waf_events')
          ->select('method', DB::raw('COUNT(method) as `methods` '))
@@ -210,6 +239,11 @@ class FirewallController extends Controller
 
 
          $method=json_decode($method,true);
+         $method_total=0;
+         foreach($method as $sum){
+                $method_total += $sum['methods'];
+
+         }
 
 
          $request_type = DB::table('waf_events')
@@ -221,9 +255,10 @@ class FirewallController extends Controller
          ->take(10)
          ->get();
 
-
+         //$request_total=0;
          $request_type=json_decode($request_type,true);
-
+         
+        // echo $request_total;
 //dd($request_type);
 
 
@@ -285,7 +320,56 @@ if($req->time !="" || $req->time > 0){
                           $like_query[] = $final[$k];
                       }
       // onLoad();
-                }                   
+                }   
+                
+                
+                else if($time == "month_3" ){
+                    $like_query = array();
+                    $hours_graph = 26;
+                    $days_graph = 90;
+                    $final = array();
+
+                    $arr = array();
+                    for($k = 0 ; $k < 3 ; $k++){ 
+                        $start = date( "Y-m-d  H:i:s" );
+                        $end = strtotime('-'.$k.' month',strtotime($start));
+ 
+                         $temp =  date( "Y-m-d  H:i:s" , $end);
+
+                         $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+
+                         $final[$k] =  date( "Y-m" , strtotime($temp));
+               
+                        $like_query[$k] = $final[$k];
+                       
+                    } 
+              }           
+
+
+            else if($time == "month_6" ){
+                    $like_query = array();
+                    $hours_graph = 26;
+                    $days_graph = 180;
+                    $final = array();
+
+                    $arr = array();
+                    for($k = 0 ; $k < 6 ; $k++){ 
+                        $start = date( "Y-m-d  H:i:s" );
+                        $end = strtotime('-'.$k.' month',strtotime($start));
+ 
+                         $temp =  date( "Y-m-d  H:i:s" , $end);
+
+                         $arr[0]=   date( "Y-m-d  H:i:s" , strtotime($temp)); 
+
+                         $final[$k] =  date( "Y-m" , strtotime($temp));
+               
+                        $like_query[$k] = $final[$k];
+                       
+                    } 
+              } 
+
+
+
           
         else if($time == "week" ){
          //  $like_query = array();
@@ -477,9 +561,49 @@ for($i = 0 ; $i <= $days_graph ; $i++){
           $period[$i] = $temp;
 
   }
+  }
+
+  else if($days_graph ==90){
+    // dd($$hours_graph);
+  for($i = 0 ; $i < 3 ; $i++){
+       $start = date('Y-m-d  H:i:s'); 
+       // echo $start ; die();
+       if($i == 0){
+            $temp =  date( "Y-M" , strtotime($start));
+            
+        }
+        else{
+            $start = date('Y-m-d H:i:s' , strtotime('-'.$i.'Month',strtotime($start)));
+            $end = strtotime('-'.$i.' Month',strtotime($start));
+            $temp =  date( "Y-M" , strtotime($start));
+        }
+            $period[$i] = $temp;
+
+    }  
+
+    }
+
+    else if($days_graph ==180){
+    // dd($$hours_graph);
+  for($i = 0 ; $i <= 5 ; $i++){
+       $start = date('Y-m-d  H:i:s'); 
+       // echo $start ; die();
+       if($i == 0){
+            $temp =  date( "Y-M" , strtotime($start));
+            
+        }
+        else{
+            $start = date('Y-m-d H:i:s' , strtotime('-'.$i.'Month',strtotime($start)));
+            $end = strtotime('-'.$i.' Month',strtotime($start));
+            $temp =  date( "Y-M" , strtotime($start));
+        }
+            $period[$i] = $temp;
+
+    }
+}
           // $period[$i] = $temp;
   // die();
-  }
+  
 
   // dd($period);
 
@@ -572,7 +696,7 @@ $period = array_unique($period);
             $rules=$zone->FirewallRule;
 
             $uaRules=$zone->UaRule;
-            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type'));    
+            return view('admin.firewall.index', compact('records','zone','zoneSetting','rules','uaRules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type','method_total','domain_total','countries_total','paths_total','accounts_total','duplicates_total'));    
         }
         else
         {
@@ -580,7 +704,7 @@ $period = array_unique($period);
             // dd($rules);
             
             // dd($events);
-            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type'));
+            return view('admin.spfirewall.index', compact('records','zone','zoneSetting','rules','wafPackages','events','duplicates','accounts','paths','countries','domain','method','challenge','block' , 'allow', 'log','period',"drop",'request_type','method_total','domain_total','countries_total','paths_total','accounts_total','duplicates_total'));
         }
         
         
